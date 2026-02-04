@@ -1,0 +1,34 @@
+@import url("https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+@import "tailwindcss";
+
+/* ALLOWS TYPOGRAPHY CONTROL */
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  p {
+    @apply text-paragraph text-lg font-normal font-text leading-7;
+  }
+}
+/* THEME FROM FIGMA */
+@theme {
+  --color-heading: #212529;
+  --color-accent: #0c3966;
+  --color-paragraph: #292c2f;
+  --color-primary: #f2f2f2;
+  --color-background: #e6ebef;
+  --color-bg2: #f7f7f7;
+  --color-accent-red: #e30613;
+  --color-border: #d8d8d8;
+
+  --font-sans: "Spline Sans", sans-serif;
+  --font-text: "Open Sans", sans-serif;
+}
