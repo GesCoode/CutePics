@@ -12,10 +12,10 @@
     src={background}
     alt=""
     aria-hidden="true"
-    class="absolute w-screen h-full object-cover -z-1"
+    class="absolute w-screen h-full object-cover z-1"
   />
 
-  <div class="w-100">
+  <div class="w-100 z-1">
     <Login></Login>
   </div>
 </div>

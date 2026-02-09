@@ -12,30 +12,33 @@
     id="hero"
     class="relative flex flex-col gap-9 px-4 text-center justify-center py-16 bg-linear-to-bl from-black/0 to-black/30 overflow-hidden"
   >
-    <img
-      src={background}
-      alt=""
-      aria-hidden="true"
-      class="absolute w-screen h-full object-cover -z-1 -m-4"
-    />
+    <div class="absolute w-screen h-full object-cover -m-4">
+      <img
+        src={background}
+        alt=""
+        aria-hidden="true"
+        class="w-screen h-full object-cover"
+      />
+    </div>
 
-    <h1 class="text-primary text-6xl font-medium font-sans">
+    <h1 class="text-primary text-6xl font-medium font-sans z-1">
       Veiligheid binnen handbereik met SOS tag
     </h1>
 
-    <p class="text-primary">
+    <p class="text-primary z-1">
       Met SOS tag ben je altijd voorbereid op noodsituaties. Scan de QR-code en
       krijg direct toegang tot belangrijke medische informatie
     </p>
 
-    <div id="buttons" class="flex justify-center gap-4">
-      <button
+    <div id="buttons" class="flex justify-center gap-4 z-1">
+      <a
+        href="/producten"
         class="rounded px-6 py-2 bg-accent inline-flex justify-center items-center w-auto"
       >
         <span class="text-primary text-lg font-bold font-text leading-7">
           Ontdek
         </span>
-      </button>
+      </a>
 
       <button
         class="rounded px-6 py-2 bg-white/10 backdrop-blur-lg inline-flex justify-center items-center w-auto"

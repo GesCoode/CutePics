@@ -8,6 +8,11 @@
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
+
 <Navbar></Navbar>
-{@render children()}
+
+<div class="bg-[#E6EBEF]">
+  {@render children()}
+</div>
+
 <Footer></Footer>
