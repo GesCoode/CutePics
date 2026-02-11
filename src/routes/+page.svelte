@@ -10,27 +10,28 @@
 <div id="wrapper" class="w-full flex flex-col">
   <div
     id="hero"
-    class="relative flex flex-col gap-9 px-4 text-center justify-center py-16 bg-linear-to-bl from-black/0 to-black/30 overflow-hidden"
+    class="relative flex flex-col gap-9 px-4 text-center justify-center py-16 bg-linear-to-bl from-black/0 to-black/30 overflow-hidden bg-cover bg-center"
+    style="background-image: url('{background}')"
   >
-    <div class="absolute w-screen h-full object-cover -m-4">
+    <!-- <div class="absolute inset-0">
       <img
         src={background}
         alt=""
         aria-hidden="true"
-        class="w-screen h-full object-cover"
+        class="w-full h-full object-cover"
       />
-    </div>
+    </div> -->
 
-    <h1 class="text-primary text-6xl font-medium font-sans z-1">
+    <h1 class="text-primary text-6xl font-medium font-sans">
       Veiligheid binnen handbereik met SOS tag
     </h1>
 
-    <p class="text-primary z-1">
+    <p class="text-primary">
       Met SOS tag ben je altijd voorbereid op noodsituaties. Scan de QR-code en
       krijg direct toegang tot belangrijke medische informatie
     </p>
 
-    <div id="buttons" class="flex justify-center gap-4 z-1">
+    <div id="buttons" class="flex justify-center gap-4">
       <a
         href="/producten"
         class="rounded px-6 py-2 bg-accent inline-flex justify-center items-center w-auto"

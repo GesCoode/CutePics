@@ -1,5 +1,5 @@
 <script lang="ts">
-  import background from "$lib/assets/background.png";
+  // import background from "$lib/assets/background.png";
   import FieldBuilder from "$lib/components/FieldBuilder/FieldBuilder.svelte";
   import Button from "$lib/components/FieldBuilder/Button.svelte";
   import InputField from "$lib/components/FieldBuilder/InputField.svelte";
