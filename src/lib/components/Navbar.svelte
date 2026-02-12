@@ -12,6 +12,10 @@
 >
   <div id="left">
     <!-- CONTENT TO COME -->
+    <a class="px-2" href="/contact">contact</a>
+    <a class="px-2" href="/informatie">informatie</a>
+    <a class="px-2" href="/producten">producten</a>
+    <a class="px-2" href="/account">account</a>
   </div>
 
   <a href="/" class="mt-12 justify-self-center self-center">

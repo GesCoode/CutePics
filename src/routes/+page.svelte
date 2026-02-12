@@ -15,7 +15,7 @@
   >
     <!-- <div class="absolute inset-0">
       <img
-        src={background}
+        src=#
         alt=""
         aria-hidden="true"
         class="w-full h-full object-cover"
