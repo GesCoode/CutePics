@@ -28,10 +28,7 @@
   }
 </script>
 
-<div
-  id="wrapper"
-  class="w-full flex flex-col bg-white rounded overflow-hidden max-w-96"
->
+<div id="wrapper" class="w-full flex flex-col bg-white rounded overflow-hidden">
   <img src={image} alt="" class="w-full" />
 
   <div id="content" class="flex flex-col gap-4 px-4 py-4">

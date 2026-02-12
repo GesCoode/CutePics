@@ -8,7 +8,7 @@
 
 <div
   id="wrapper"
-  class="flex flex-row py-4 justify-between items-center px-4 bg-primary z-10"
+  class="flex flex-row py-4 justify-between items-center px-4 bg-primary overflow-visible h-20"
 >
   <div id="left">
     <!-- CONTENT TO COME -->
@@ -18,7 +18,7 @@
      <a class="px-2" href="/account">account</a>
   </div>
 
-  <a href="/" class="h-25 absolute left-1/2 -translate-x-1/2 translate-y-1/3">
+  <a href="/" class="mt-12 justify-self-center self-center">
     <img src={logo} alt="logo" class="h-25" />
   </a>
 

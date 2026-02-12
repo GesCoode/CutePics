@@ -2,11 +2,13 @@
   "version": "5",
   "specifiers": {
     "npm:@sveltejs/adapter-auto@7": "7.0.0_@sveltejs+kit@2.49.2__@sveltejs+vite-plugin-svelte@6.2.1___svelte@5.46.1____acorn@8.15.0___vite@7.3.0____picomatch@4.0.3__svelte@5.46.1___acorn@8.15.0__vite@7.3.0___picomatch@4.0.3__acorn@8.15.0_@sveltejs+vite-plugin-svelte@6.2.1__svelte@5.46.1___acorn@8.15.0__vite@7.3.0___picomatch@4.0.3_svelte@5.46.1__acorn@8.15.0_vite@7.3.0__picomatch@4.0.3",
+    "npm:@sveltejs/adapter-static@^3.0.10": "3.0.10_@sveltejs+kit@2.49.2__@sveltejs+vite-plugin-svelte@6.2.1___svelte@5.46.1____acorn@8.15.0___vite@7.3.0____picomatch@4.0.3__svelte@5.46.1___acorn@8.15.0__vite@7.3.0___picomatch@4.0.3__acorn@8.15.0_@sveltejs+vite-plugin-svelte@6.2.1__svelte@5.46.1___acorn@8.15.0__vite@7.3.0___picomatch@4.0.3_svelte@5.46.1__acorn@8.15.0_vite@7.3.0__picomatch@4.0.3",
     "npm:@sveltejs/kit@^2.49.1": "2.49.2_@sveltejs+vite-plugin-svelte@6.2.1__svelte@5.46.1___acorn@8.15.0__vite@7.3.0___picomatch@4.0.3_svelte@5.46.1__acorn@8.15.0_vite@7.3.0__picomatch@4.0.3_acorn@8.15.0",
     "npm:@sveltejs/vite-plugin-svelte@^6.2.1": "6.2.1_svelte@5.46.1__acorn@8.15.0_vite@7.3.0__picomatch@4.0.3",
     "npm:@tailwindcss/vite@^4.1.17": "4.1.18_vite@7.3.0__picomatch@4.0.3",
     "npm:svelte-check@^4.3.4": "4.3.5_svelte@5.46.1__acorn@8.15.0_typescript@5.9.3",
     "npm:svelte@^5.45.6": "5.46.1_acorn@8.15.0",
+    "npm:sveltejs@^0.0.1-security": "0.0.1-security",
     "npm:tailwindcss@^4.1.17": "4.1.18",
     "npm:typescript@^5.9.3": "5.9.3",
     "npm:vite@^7.2.6": "7.3.0_picomatch@4.0.3"
@@ -293,6 +295,12 @@
     },
     "@sveltejs/adapter-auto@7.0.0_@sveltejs+kit@2.49.2__@sveltejs+vite-plugin-svelte@6.2.1___svelte@5.46.1____acorn@8.15.0___vite@7.3.0____picomatch@4.0.3__svelte@5.46.1___acorn@8.15.0__vite@7.3.0___picomatch@4.0.3__acorn@8.15.0_@sveltejs+vite-plugin-svelte@6.2.1__svelte@5.46.1___acorn@8.15.0__vite@7.3.0___picomatch@4.0.3_svelte@5.46.1__acorn@8.15.0_vite@7.3.0__picomatch@4.0.3": {
       "integrity": "sha512-ImDWaErTOCkRS4Gt+5gZuymKFBobnhChXUZ9lhUZLahUgvA4OOvRzi3sahzYgbxGj5nkA6OV0GAW378+dl/gyw==",
+      "dependencies": [
+        "@sveltejs/kit"
+      ]
+    },
+    "@sveltejs/adapter-static@3.0.10_@sveltejs+kit@2.49.2__@sveltejs+vite-plugin-svelte@6.2.1___svelte@5.46.1____acorn@8.15.0___vite@7.3.0____picomatch@4.0.3__svelte@5.46.1___acorn@8.15.0__vite@7.3.0___picomatch@4.0.3__acorn@8.15.0_@sveltejs+vite-plugin-svelte@6.2.1__svelte@5.46.1___acorn@8.15.0__vite@7.3.0___picomatch@4.0.3_svelte@5.46.1__acorn@8.15.0_vite@7.3.0__picomatch@4.0.3": {
+      "integrity": "sha512-7D9lYFWJmB7zxZyTE/qxjksvMqzMuYrrsyh1f4AlZqeZeACPRySjbC3aFiY55wb1tWUaKOQG9PVbm74JcN2Iew==",
       "dependencies": [
         "@sveltejs/kit"
       ]
@@ -757,6 +765,9 @@
         "zimmerframe"
       ]
     },
+    "sveltejs@0.0.1-security": {
+      "integrity": "sha512-BFMNI6PtP7hdYcVFs1BIWLnt+5MUoKvkQpgoBQ0z36SSgFIO/ZpshDwrlbG3X1bL35B7Kh8sE7jWjvfnSrC1RA=="
+    },
     "tailwindcss@4.1.18": {
       "integrity": "sha512-4+Z+0yiYyEtUVCScyfHCxOYP06L5Ne+JiHhY2IjR2KWMIWhJOYZKLSGZaP5HkZ8+bY0cxfzwDE5uOmzFXyIwxw=="
     },
@@ -809,11 +820,13 @@
     "packageJson": {
       "dependencies": [
         "npm:@sveltejs/adapter-auto@7",
+        "npm:@sveltejs/adapter-static@^3.0.10",
         "npm:@sveltejs/kit@^2.49.1",
         "npm:@sveltejs/vite-plugin-svelte@^6.2.1",
         "npm:@tailwindcss/vite@^4.1.17",
         "npm:svelte-check@^4.3.4",
         "npm:svelte@^5.45.6",
+        "npm:sveltejs@^0.0.1-security",
         "npm:tailwindcss@^4.1.17",
         "npm:typescript@^5.9.3",
         "npm:vite@^7.2.6"
