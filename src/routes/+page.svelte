@@ -14,7 +14,7 @@
   >
     <div class="absolute w-screen h-full object-cover -m-4">
       <img
-        src={background}
+        src=#
         alt=""
         aria-hidden="true"
         class="w-screen h-full object-cover"
