@@ -1,8 +1,9 @@
-<script>
-  import Button from "./FieldBuilder/Button.svelte";
+<script lang="ts">
+  import CustomButton from "$lib/components/form/CustomButton.svelte";
   import FieldBuilder from "./FieldBuilder/FieldBuilder.svelte";
   import InputField from "./FieldBuilder/InputField.svelte";
   import mail from "$lib/assets/mail.svg";
+  import key from "$lib/assets/key.svg";
 
   let email = "";
   let password = "";
@@ -32,17 +33,31 @@
         bind:value={password}
         type="password"
         placeholder="Typ uw wachtwoord"
-        icon={mail}
+        icon={key}
       ></InputField>
     </div>
 
     <div class="flex flex-col gap-4">
-      <Button content="Inloggen" onClick={handleLogin}></Button>
-      <Button
-        content="Wachtwoord vergeten"
-        primary={false}
-        onClick={forgotPassword}
-      ></Button>
+      <!-- Login button -->
+      <CustomButton
+        text="Inloggen"
+        rounded={true}
+        bgColor="#0C3966"
+        textColor="#FFFFFF"
+        on:click={handleLogin}
+      />
+
+      <!-- Forgot password button -->
+      <CustomButton
+        text="Wachtwoord vergeten"
+        rounded={true}
+        bgColor="rgba(255, 255, 255, 0.1)"
+        textColor="#0C3966"
+        outlineColor="#0C3966"
+        outlineWidth={1}
+        class="backdrop-blur-lg"
+        on:click={forgotPassword}
+      />
     </div>
   </FieldBuilder>
 </div>

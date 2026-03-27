@@ -30,10 +30,10 @@
   <div id="branding" class="h-[108px] flex justify-between items-center">
     <img src={logo} class="h-full" />
 
-    <div class="flex flex-col gap-5">
+    <!-- <div class="flex flex-col gap-5">
       <p class="text-2xl text-white">team@sostag.nl</p>
       <p class="text-2xl text-white">06-402 188 79</p>
-    </div>
+    </div> -->
   </div>
 
   <hr class="w-full border-t border-white" />

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import mail from "$lib/assets/mail.svg";
+  import mail from "$lib/assets/eye.svg";
 
   type Props = {
     label: string;
