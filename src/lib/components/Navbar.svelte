@@ -93,6 +93,7 @@
     <a href="/contact" on:click={closeMenu}>contact</a>
 
     <!-- Button -->
+        <div class="flex w-auto items-start mt-2">
     <CustomButton
       text="Inloggen"
       rounded={true}
@@ -104,5 +105,6 @@
       }}
       class="mt-4"
     />
+  </div>
   </div>
 {/if}
