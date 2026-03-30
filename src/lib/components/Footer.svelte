@@ -7,7 +7,7 @@
       links: [
         "Leveringsvoorwaarden",
         "Uw privacy",
-        "Hoe en wat informatie",
+        "Hoe-het-werkt",
         "Samenwerking",
       ],
     },

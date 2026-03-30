@@ -1,9 +1,11 @@
 <script lang="ts">
   import logo from "$lib/assets/logo.png";
+  import cartIcon from "$lib/assets/cartIconThick.svg";
   import { slide } from "svelte/transition";
   import CustomButton from "$lib/components/form/CustomButton.svelte";
 
   let menuOpen = false;
+  let ingelogd = false;
 
   function toggleMenu() {
     menuOpen = !menuOpen;
@@ -24,18 +26,16 @@
   <!-- LEFT -->
   <div class="flex items-center gap-4">
     <!-- HAMBURGER -->
-    <button class="lg:hidden relative w-6 h-6 z-50" on:click={toggleMenu}>
+    <button class="xl:hidden relative w-6 h-6 z-50" on:click={toggleMenu}>
       <span
         class="absolute left-0 top-1 w-full h-0.5 bg-black transition-all duration-300"
         class:rotate-45={menuOpen}
         class:top-3={menuOpen}
       ></span>
-
       <span
         class="absolute left-0 top-3 w-full h-0.5 bg-black transition-all duration-300"
         class:opacity-0={menuOpen}
       ></span>
-
       <span
         class="absolute left-0 top-5 w-full h-0.5 bg-black transition-all duration-300"
         class:-rotate-45={menuOpen}
@@ -44,11 +44,17 @@
     </button>
 
     <!-- DESKTOP LINKS -->
-    <div id="left" class="hidden lg:flex">
-      <a class="px-2" href="/account">account</a>
-      <a class="px-2" href="/informatie">informatie</a>
+    <div id="left" class="hidden xl:flex">
+      <a class="px-2" href="/">voorpagina</a>
+      <a class="px-2" href="/informatie">hoe-het-werkt</a>
       <a class="px-2" href="/producten">producten</a>
       <a class="px-2" href="/contact">contact</a>
+    </div>
+
+    <div class="flex items-center">
+      <a href="/winkelwagen">
+        <img src={cartIcon} class="cursor-pointer h-7 w-auto relative top-0.4" alt="Winkelwagen" />
+      </a>
     </div>
   </div>
 
@@ -57,17 +63,27 @@
     <img src={logo} alt="logo" class="h-25" />
   </a>
 
-  <!-- RIGHT (always visible) -->
+  <!-- RIGHT BUTTON -->
   <div id="button">
-    <CustomButton
-      text="Inloggen"
-      rounded={true}
-      bgColor="#0C3966"
-      textColor="#FFFFFF"
-      on:click={signIn}
-    />
+    {#if ingelogd}
+      <a href="/account/medisch">
+        <CustomButton
+          text="Account"
+          rounded={true}
+          bgColor="#0C6639"
+          textColor="#FFFFFF"
+        />
+      </a>
+    {:else}
+      <CustomButton
+        text="Inloggen"
+        rounded={true}
+        bgColor="#0C3966"
+        textColor="#FFFFFF"
+        on:click={signIn}
+      />
+    {/if}
   </div>
-
 </div>
 
 <!-- OVERLAY -->
@@ -91,20 +107,35 @@
     <a href="/informatie" on:click={closeMenu}>informatie</a>
     <a href="/producten" on:click={closeMenu}>producten</a>
     <a href="/contact" on:click={closeMenu}>contact</a>
-
+<!-- Side Menu Links -->
+<a
+  href="/winkelwagen"
+  on:click={closeMenu}
+  class="flex justify-between items-center w-full text-base font-normal hover:text-green-700"
+>
+  <span>winkelwagen</span>
+  <img src={cartIcon} alt="Winkelwagen" class="h-5 w-auto cursor-pointer" />
+</a>
     <!-- Button -->
-        <div class="flex w-auto items-start mt-2">
-    <CustomButton
-      text="Inloggen"
-      rounded={true}
-      bgColor="#0C3966"
-      textColor="#FFFFFF"
-      on:click={() => {
-        signIn();
-        closeMenu();
-      }}
-      class="mt-4"
-    />
-  </div>
+    <div class="flex w-full items-start mt-2">
+      {#if ingelogd}
+      <a href="/account/medisch">
+        <CustomButton
+          text="Account"
+          rounded={true}
+          bgColor="#0C6639"
+          textColor="#FFFFFF"
+        />
+      </a>
+    {:else}
+      <CustomButton
+        text="Inloggen"
+        rounded={true}
+        bgColor="#0C3966"
+        textColor="#FFFFFF"
+        on:click={signIn}
+      />
+    {/if}
+    </div>
   </div>
 {/if}

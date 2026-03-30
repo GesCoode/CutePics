@@ -210,12 +210,23 @@
                 </p>
               </div>
               <div class="flex items-center gap-1">
-              <p class="text-[18px] font-normal leading-[28px] tracking-[-0.18px] text-[var(--accent,#0C3966)] font-open">
-                Bekijk de collectie              
-              </p>
+              
+                <!-- Clickable collection link -->
+                <a 
+                  href="/winkelwagen"
+                  class="group flex items-center gap-1 cursor-pointer"
+                >
+                  <p class="text-[18px] font-normal leading-[28px] tracking-[-0.18px] text-[var(--accent,#0C3966)] font-open 
+                            group-hover:text-[#0C3966] transition-colors duration-300">
+                    Bekijk de collectie
+                  </p>
 
-              <img src={rightArrow} alt="icon" class="inline w-7 h-7" />
-
+                  <img 
+                    src={rightArrow} 
+                    alt="icon" 
+                    class="inline w-7 h-7 transform transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </a>
               </div>
             </div>
           </div>
