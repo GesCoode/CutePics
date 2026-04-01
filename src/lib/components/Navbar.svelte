@@ -17,7 +17,7 @@
 </script>
 
 <!-- NAVBAR -->
-<div class="relative z-50 flex flex-row py-4 justify-between items-center px-4 bg-primary overflow-visible h-20">
+<div class="relative z-50 flex flex-row py-4 justify-between items-center px-4 sm:px-16 bg-primary overflow-visible h-20">
 
   <!-- LEFT -->
   <div class="flex items-center gap-4">
@@ -41,13 +41,13 @@
 
     <!-- DESKTOP LINKS -->
     <div id="left" class="hidden xl:flex">
-      <a class="px-2" href="/">voorpagina</a>
+      <a class="pr-2" href="/">voorpagina</a>
       <a class="px-2" href="/hoehetwerkt">hoe-het-werkt</a>
       <a class="px-2" href="/producten">producten</a>
       <a class="px-2" href="/contact">contact</a>
     </div>
 
-    <div class="flex items-center">
+    <div class="flex items-center sm:px-4">
       <a href="/winkelwagen">
         <img src={cartIcon} class="cursor-pointer h-7 w-auto relative top-0.4" alt="Winkelwagen" />
       </a>
@@ -100,7 +100,11 @@
     on:click|stopPropagation
   >
     <!-- Links -->
-    <a href="/account" on:click={closeMenu}>account</a>
+    {#if ingelogd}
+      <a href="/account/medisch" on:click={closeMenu}>account</a>
+    {:else}
+      <a href="/login" on:click={closeMenu}>inloggen</a>
+    {/if}    
     <a href="/informatie" on:click={closeMenu}>informatie</a>
     <a href="/producten" on:click={closeMenu}>producten</a>
     <a href="/contact" on:click={closeMenu}>contact</a>
@@ -115,27 +119,5 @@
       <img src={cartIcon} alt="Winkelwagen" class="h-5 w-auto cursor-pointer" />
     </a>
 
-    <!-- Button -->
-    <div class="flex w-full items-start mt-2">
-      {#if ingelogd}
-        <a href="/account/medisch">
-          <CustomButton
-            text="Account"
-            rounded={true}
-            bgColor="#0C6639"
-            textColor="#FFFFFF"
-          />
-        </a>
-      {:else}
-        <a href="/login">
-          <CustomButton
-            text="Inloggen"
-            rounded={true}
-            bgColor="#0C3966"
-            textColor="#FFFFFF"
-          />
-        </a>
-      {/if}
-    </div>
   </div>
 {/if}

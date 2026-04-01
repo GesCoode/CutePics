@@ -5,9 +5,19 @@
   import medical from "$lib/assets/medical.svg";
   import rightArrow from '$lib/assets/rightArrow.svg';
 
+  import hanger from '$lib/assets/FPHanger.png';
+  import sportBracelet from '$lib/assets/FPSportBracelet.png';
+  import bracelet from '$lib/assets/FPBracelet.png';
+  import reanimate from '$lib/assets/FPReanimate.png';
+  import kids from '$lib/assets/FPKids.png';
+  import watch from '$lib/assets/FPWatch.png';
+
+
   import Login from "$lib/components/Login.svelte";
   import Slideshow from "$lib/components/Slideshow.svelte";
   import CustomButton from "$lib/components/form/CustomButton.svelte";
+  import FPNormal from "$lib/components/FPNormal.svelte";
+  import FPSide from "$lib/components/FPSide.svelte";
 </script>
 
 <div id="wrapper" class="w-full flex flex-col gap-16 pb-8">
@@ -177,25 +187,71 @@
       </style>
 
         <div class="grid w-full h-[600px] gap-4 grid-rows-3 grid-cols-4">
-          <div 
-            class="row-span-2 col-span-1 self-stretch justify-self-stretch bg-[#CCE0F5]">
+          <div class="row-span-2 col-span-1 self-stretch justify-self-stretch bg-[#CCE0F5]">
+            <FPNormal 
+              image={hanger}
+              title="Ketting"
+              description="Duidelijk zichtbaar in geval van nood"
+              imgHeight={394}
+              scale=0.68
+              href="/producten"
+            />
           </div>
 
-          <div 
-            class="row-span-1 col-span-1 self-stretch justify-self-stretch bg-[#CCE0F5]">
+          <div class="row-span-1 col-span-1 self-stretch justify-self-stretch bg-[#CCE0F5]">
+            <FPNormal 
+              image={bracelet}
+              title="Armband"
+              description="Comfortabel om de pols"
+              imgHeight={189}
+              scale=0.5
+              href="/producten"
+            />
           </div>
 
-          <div
-            class="h-[320px] self-start row-start-2 row-span-1 col-start-3 col-span-1 justify-self-stretch bg-[#CCE0F5]">
+          <div class="h-[320px] self-start row-start-2 row-span-1 col-start-3 col-span-1 justify-self-stretch bg-[#CCE0F5]">
+            <FPNormal 
+              image={watch}
+              title="Slide-on"
+              description="Perfect voor horloges"
+              imgHeight={320}
+              scale=1
+              href="/producten"
+            />
           </div>
 
           <div class="self-stretch row-start-2 row-span-2 col-start-4 col-span-1 justify-self-stretch bg-[#CCE0F5]">
+            <FPNormal 
+              image={reanimate}
+              title="Niet reanimeren"
+              description="Met handtekening en portretfoto"
+              imgHeight={394}
+              scale=1.08
+              href="/producten"
+            />
           </div>
           
           <div class="self-start row-start-1 row-span-1 col-start-3 col-span-2 justify-self-start bg-[#CCE0F5] w-full h-full">
+            <FPSide 
+              image={sportBracelet}
+              title="Sportarmband"
+              description="Ideaal voor actieve mensen"
+              imgHeight={189}
+              scale=1
+              alignRight = true
+              href="/producten"
+            />
           </div>
           
           <div class="row-span-1 col-span-1 self-stretch justify-self-stretch bg-[#CCE0F5]">
+            <FPNormal 
+              image={kids}
+              title="Klittenband"
+              description="Extra fijn voor uw kinderen"
+              imgHeight={189}
+              scale=0.64
+              href="/producten"
+            />
           </div>
 
           <div class="flex flex-col items-start gap-2 p-2 self-stretch row-start-3 row-span-1 col-start-1 col-span-2 justify-self-stretch">
@@ -276,8 +332,6 @@
               </div>
             </div>
           </div>
-
       </div>
-
   </div>
 </div>

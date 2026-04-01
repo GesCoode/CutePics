@@ -14,6 +14,7 @@
   import video3 from "$lib/assets/Nepal.mp4";
   import thumbnail3 from "$lib/assets/TempImage0.png";
   import VideoInformationMobile from "$lib/components/videoInformationMobile.svelte";
+  import AnswerBlock from "$lib/components/answerBlock.svelte";
 
   // Array of videos
   const videos = [
@@ -26,22 +27,45 @@
         {
       title: "Nepal video",
       content: "This video shows beautiful scenery in Nepal.",
-      videoUrl: video0,
-      thumbnailUrl: thumbnail0
+      videoUrl: video1,
+      thumbnailUrl: thumbnail1
     },
         {
       title: "Nepal video",
       content: "This video shows beautiful scenery in Nepal.",
-      videoUrl: video0,
-      thumbnailUrl: thumbnail0
+      videoUrl: video2,
+      thumbnailUrl: thumbnail2
     },
         {
       title: "Nepal video",
       content: "This video shows beautiful scenery in Nepal.",
-      videoUrl: video0,
-      thumbnailUrl: thumbnail0
+      videoUrl: video3,
+      thumbnailUrl: thumbnail3
     },
   ];
+
+  const answers = [
+    {
+    question: "Why is the sky blue?",
+    answer: "The sky appears blue because of a phenomenon called Rayleigh scattering. As sunlight reaches Earth's atmosphere, it collides with gases and particles, which scatter the light in all directions. Blue light travels in shorter, smaller waves and is scattered more extensively than other colors, making the sky appear blue to our eyes. "
+    },
+
+    {
+    question: "Why is the sky blue?",
+    answer: "The sky appears blue because of a phenomenon called Rayleigh scattering. As sunlight reaches Earth's atmosphere, it collides with gases and particles, which scatter the light in all directions. Blue light travels in shorter, smaller waves and is scattered more extensively than other colors, making the sky appear blue to our eyes. "
+    },
+
+        {
+    question: "Why is the sky blue?",
+    answer: "The sky appears blue because of a phenomenon called Rayleigh scattering. As sunlight reaches Earth's atmosphere, it collides with gases and particles, which scatter the light in all directions. Blue light travels in shorter, smaller waves and is scattered more extensively than other colors, making the sky appear blue to our eyes. "
+    },
+
+        {
+    question: "Why is the sky blue?",
+    answer: "The sky appears blue because of a phenomenon called Rayleigh scattering. As sunlight reaches Earth's atmosphere, it collides with gases and particles, which scatter the light in all directions. Blue light travels in shorter, smaller waves and is scattered more extensively than other colors, making the sky appear blue to our eyes. "
+    },
+    
+  ]
 </script>
 
 <div class="flex px-4 sm:px-8 lg:px-16 justify-center self-stretch w-full">
@@ -86,10 +110,14 @@
     <!-- Divider -->
     <div class="w-full h-px bg-gray-300 my-4"></div>
 
-    <!-- Question and answers -->
-    <div class="flex w-[600px] flex-col justify-center items-center gap-4">
-      <!-- Questions and answers content goes here -->
-    </div>
-
+    <!-- Question and answers --> 
+     <div class="flex flex-col justify-center items-center gap-3 self-stretch">
+        <div class="flex flex-col justify-center items-center gap-3 self-stretch">
+            <!-- Answer block -->
+             {#each answers as answer}
+                <AnswerBlock text={answer.question}, content={answer.answer} />
+             {/each}
+        </div>
+     </div>
   </div>
 </div>

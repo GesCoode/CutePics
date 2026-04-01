@@ -17,7 +17,7 @@
     },
     {
       heading: "Ons adres",
-      links: ["Prinses Christinalaan 8\n7437XZ Bathmen"],
+      links: ["Prinses Christinalaan 8", "7437XZ Bathmen"],
     },
     {
       heading: "Over ons",
