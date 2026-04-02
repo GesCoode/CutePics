@@ -20,7 +20,7 @@
 <div class="relative z-50 flex flex-row py-4 justify-between items-center px-4 sm:px-16 bg-primary overflow-visible h-20">
 
   <!-- LEFT -->
-  <div class="flex items-center gap-4">
+  <div class="flex items-center sm:gap-0 gap-4">
     <!-- HAMBURGER -->
     <button class="xl:hidden relative w-6 h-6 z-50" on:click={toggleMenu}>
       <span

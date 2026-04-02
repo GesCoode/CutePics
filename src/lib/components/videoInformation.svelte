@@ -9,7 +9,7 @@
 </script>
 
 <!-- RED CONTAINER: width adjusts to content -->
-<div class="inline-flex items-start gap-1 p-2">
+<div class="inline-flex items-start gap-1 p-2 w-full">
 
   <!-- Spacer for odd positions -->
   {#if position % 2 === 1}
@@ -17,8 +17,7 @@
   {/if}
 
   <!-- BLUE BOX + CONTENT -->
-  <div class="flex max-w-[720px] items-start gap-2 h-[200px]">
-
+  <div class="flex items-start gap-2 h-[200px] w-full max-w-[800px]">
     <!-- THUMBNAIL: FIXED SIZE -->
     <div 
       class="flex-none w-[200px] h-[200px] relative cursor-pointer overflow-hidden rounded-[5px] group"
@@ -43,16 +42,15 @@
     </div>
 
     <!-- RIGHT CONTENT -->
-    <div class="flex flex-col items-start gap-2 h-full">
-
+  <div class="flex flex-col items-start gap-2 h-full flex-1 min-w-0">
       <!-- TITLE BOX -->
       <div class="flex w-full justify-center p-1 flex-col items-center gap-3 rounded-[5px] border border-[#DBDBDB] bg-[#fff]">
         <p class="text-center text-[16px] font-semibold text-[#212529] font-heebo">{title}</p>
       </div>
 
       <!-- CONTENT BOX -->
-      <div class="flex p-3 max-w-[302px] h-full flex-col items-start rounded-[5px] border border-[#DBDBDB] bg-[#fff]">
-        <div class="h-full text-[14px] font-normal text-[#212529] font-heebo">
+      <div class="flex p-3 h-full flex-col items-start rounded-[5px] border border-[#DBDBDB] bg-[#fff]">
+        <div class="h-full text-[14px] font-normal text-[#212529] font-heebo w-[566px]">
           {content}
         </div>
       </div>

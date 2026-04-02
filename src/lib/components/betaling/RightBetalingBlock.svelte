@@ -112,7 +112,7 @@
             class="flex flex-row justify-between items-center bg-[#E0E0E0] rounded-t px-3 py-2 sticky top-0 z-10"
         >
             <div class="text-black font-bold w-1/5">Datum</div>
-            <div class="text-black font-bold w-1/5">Bedrag</div>
+            <div class="text-black font-bold w-1/5 hidden sm:block">Bedrag</div>
             <div class="text-black font-bold w-1/5 hidden sm:block">Methode</div>
             <div class="text-black font-bold w-1/5">Status</div>
             <div class="text-black font-bold w-1/5 text-center">PDF</div>
@@ -124,7 +124,7 @@
                 class="flex flex-row justify-between items-center bg-[#F0F0F0] even:bg-[#FFF] rounded px-3 py-2"
             >
                 <div class="text-black font-light w-1/5">{payment.datum}</div>
-                <div class="text-black font-light w-1/5">{payment.bedrag}</div>
+                <div class="text-black font-light w-1/5 hidden sm:block">{payment.bedrag}</div>
                 <div class="text-black font-light w-1/5 hidden sm:block">
                     {payment.betaalmethode}
                 </div>

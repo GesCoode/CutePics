@@ -1,10 +1,11 @@
 <script lang="ts">
     import accountImage from "$lib/assets/TempImage1.png";
+  import AccountMenu from "$lib/components/accountMenu.svelte";
     import LeftBetalingBlock from "$lib/components/betaling/LeftBetalingBlock.svelte";
     import RightBetalingBlock from "$lib/components/betaling/RightBetalingBlock.svelte";
 </script>
 
-<div class="w-full px-5 flex flex-col items-start">
+<div class="w-full px-5 flex flex-col items-start px-4 md:px-8 lg:px-16 pb-4">
     <div class="flex flex-col xl:flex-row gap-3 self-stretch">
         <!-- Left block -->
         <div class="h-[600px] w-full xl:flex-1 flex flex-col gap-3">

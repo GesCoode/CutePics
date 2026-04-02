@@ -20,7 +20,7 @@
   const videos = [
     {
       title: "Nepal video",
-      content: "This video shows beautiful scenery in Nepal. Lorem Ipsum",
+      content: "This video shows beautiful scenery in Nepal. Lorem Ipsum This video shows beautiful scenery in Nepal. Lorem Ipsum",
       videoUrl: video0,
       thumbnailUrl: thumbnail0
     },
@@ -32,7 +32,7 @@
     },
         {
       title: "Nepal video",
-      content: "This video shows beautiful scenery in Nepal.",
+      content: "This video shows beautiful scenery in Nepal. This video shows beautiful scenery in Nepal. Lorem Ipsum This video shows beautiful scenery in Nepal. Lorem Ipsum",
       videoUrl: video2,
       thumbnailUrl: thumbnail2
     },
@@ -68,8 +68,8 @@
   ]
 </script>
 
-<div class="flex px-4 sm:px-8 lg:px-16 justify-center self-stretch w-full">
-  <div class="flex flex-col items-center gap-6 flex-[1_0_0] w-full">
+<div class="flex px-4 pb-4 sm:px-8 lg:px-16 justify-center self-stretch w-full">
+  <div class="flex flex-col items-center gap-2 flex-[1_0_0] w-full">
     
     <!-- Top message -->
     <div class="flex flex-col items-center">
@@ -84,9 +84,9 @@
     </div>
 
     <!-- Video section -->
-    <div class="flex flex-col gap-4 md:gap-0 w-full md:items-center">
+    <div class="flex flex-col gap-4 lg:gap-0 w-full lg:items-center">
         {#each videos as video, index (index)}
-            <div class="hidden md:block">
+            <div class="hidden lg:block">
                 <VideoInformation
                     title={video.title}
                     content={video.content}
@@ -96,7 +96,7 @@
                 />
             </div>
 
-            <div class="block md:hidden">
+            <div class="block lg:hidden">
                 <VideoInformationMobile
                     title={video.title}
                     content={video.content}
@@ -108,11 +108,11 @@
     </div>
 
     <!-- Divider -->
-    <div class="w-full h-px bg-gray-300 my-4"></div>
+    <div class="w-full h-px bg-gray-300"></div>
 
     <!-- Question and answers --> 
-     <div class="flex flex-col justify-center items-center gap-3 self-stretch">
-        <div class="flex flex-col justify-center items-center gap-3 self-stretch">
+     <div class="flex flex-col pt-2 justify-center items-center w-full">
+        <div class="flex flex-col justify-center items-center gap-3 w-full">
             <!-- Answer block -->
              {#each answers as answer}
                 <AnswerBlock text={answer.question}, content={answer.answer} />

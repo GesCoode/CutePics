@@ -19,9 +19,9 @@
 </script>
 
 <!-- Outer container defines relative positioning -->
-<div class="flex flex-col md:flex-row w-full relative py-4">
+<div class="flex flex-col md:flex-row w-full relative pb-4 px-4 md:px-8 lg:px-16 pb-4">
     <!-- Left block -->
-    <div class="flex flex-col items-start gap-3 flex-1 px-5">
+    <div class="flex flex-col items-start gap-3 md:pr-4 flex-1 mt-3 md:mt-0">
         <InfoBox
             icon={AlgemeneInformatieSymbol}
             header="Algemene Informatie"
@@ -77,7 +77,7 @@
     ></div>
 
     <!-- Right block -->
-    <div class="flex flex-col items-start gap-3 flex-1 px-5 mt-6 md:mt-0">
+    <div class="flex flex-col items-start gap-3 md:pl-4 flex-1 mt-3 md:mt-0">
         <InfoBox
             icon={HuisartsSymbol}
             header="Huisarts"

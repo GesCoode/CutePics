@@ -11,8 +11,8 @@
     export let handleVerwijderAccount: () => void = () => {};
 </script>
 
-<div class="flex h-full flex-1 justify-center items-center bg-white">
-    <div class="flex flex-col items-start gap-3 w-[238px]">
+<div class="flex h-full justify-center items-center bg-white rounded">
+    <div class="flex flex-col items-start gap-3 w-[238px] px-4">
         <!-- Nieuw Wachtwoord -->
         <LabeledInput
             id="nieuwWachtwoord"

@@ -11,7 +11,7 @@
     export let handleVerlengen: () => void = () => {};
 </script>
 
-<div class="flex h-full flex-1 justify-center items-center bg-[#0C3966]">
+<div class="flex h-full flex-1 justify-center items-center bg-[#0C3966] rounded">
     <div class="flex flex-col items-center gap-12 w-full max-w-4xl px-12">
         <!-- Header -->
         <div class="text-white font-spaceGrotesk text-[20px] font-bold">
@@ -19,7 +19,7 @@
         </div>
 
         <!-- Grid Abonnement informatie -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full text-center">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full text-center">
             <!-- Startdatum -->
             <div class="flex flex-col items-center gap-2">
                 <div class="text-white font-spaceGrotesk text-[14px] font-medium">
@@ -62,7 +62,7 @@
         </div>
 
         <!-- Verlengen -->
-        <div class="flex flex-col gap-2 items-center">
+        <div class="flex flex-col gap-4 items-center">
             <div class="text-white font-spaceGrotesk text-[20px] font-bold">
                 Verlengen
             </div>

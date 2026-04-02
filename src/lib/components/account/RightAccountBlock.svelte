@@ -8,11 +8,11 @@
 </script>
 
 <div
-    class="flex flex-col justify-center items-center gap-3 flex-1 self-stretch px-6 bg-[#0C3966]"
+    class="flex flex-col justify-center items-center gap-3 flex-1 self-stretch px-6 bg-[#0C3966] rounded"
 >
     <!-- Uw emailadres -->
     <div
-        class="flex flex-col justify-center items-center self-stretch max-w-[600px]"
+        class="flex flex-col justify-center items-center self-stretch"
     >
         <LabeledOutput label="Uw emailadres" value={email} />
     </div>

@@ -40,21 +40,21 @@
     }
 </script>
 
-<div class="flex flex-col lg:flex-row w-full gap-3 items-stretch">
+<div class="flex flex-col lg:flex-row w-full gap-8 items-stretch px-4 md:px-8 lg:px-16 pb-4">
     <!-- Left block -->
-    <div class="flex flex-col lg:flex-row flex-1 gap-4">
+    <div class="flex flex-col lg:flex-row gap-4 md:gap-8 py-2 w-full">
         <!-- Profile picture -->
         <div
-            class="flex flex-col gap-4 px-4 py-6 items-center w-full lg:w-[200px] order-1 lg:order-2"
+            class="flex flex-col gap-4 items-center w-full lg:w-[200px]"
         >
             <ProfilePicture bind:fotoZichtbaarheid />
         </div>
 
         <!-- Inputs -->
-        <div class="flex flex-col gap-4 py-2 w-full order-2 lg:order-1">
+        <div class="flex flex-col gap-4 w-full order-2 lg:order-1">
             <!-- Persoonlijke gegevens -->
             <div class="flex w-full flex-row py-2 gap-4">
-                <div class="flex flex-col gap-4 px-4 py-2 w-full">
+                <div class="flex flex-col gap-4 w-full">
                     <LabeledInput
                         id="Voornaam"
                         label="Voornaam"
@@ -71,7 +71,7 @@
                     />
                 </div>
                 <div
-                    class="flex flex-col gap-4 px-4 py-2 w-full rounded-b-[4px]"
+                    class="flex flex-col gap-4 w-full rounded-b-[4px]"
                 >
                     <LabeledInput
                         id="Roepnaam"
@@ -86,8 +86,8 @@
             <hr class="border-t border-gray-200 w-full" />
 
             <!-- Adres -->
-            <div class="flex w-full flex-row py-2 gap-4">
-                <div class="flex flex-col gap-4 px-4 py-2 w-full">
+            <div class="flex w-full flex-row gap-4">
+                <div class="flex flex-col gap-4 w-full">
                     <LabeledInput
                         id="Adres"
                         label="Adres"
@@ -113,7 +113,7 @@
                         statusTextFalse="Uw adres is niet zichtbaar"
                     />
                 </div>
-                <div class="flex flex-col gap-4 px-4 py-2 w-full">
+                <div class="flex flex-col gap-4 w-full">
                     <LabeledInput
                         id="Postcode"
                         label="Postcode"
@@ -134,8 +134,8 @@
             <hr class="border-t border-gray-200 w-full" />
 
             <!-- Zorgverzekeraar -->
-            <div class="flex w-full flex-row py-2 gap-4">
-                <div class="flex flex-col gap-4 px-4 py-2 w-full">
+            <div class="flex w-full flex-row gap-4">
+                <div class="flex flex-col gap-4 w-full">
                     <LabeledInput
                         id="Zorgverzekeraar"
                         label="Zorgverzekeraar"
@@ -144,7 +144,7 @@
                         showTooltip={false}
                     />
                 </div>
-                <div class="flex flex-col gap-4 px-4 py-2 w-full">
+                <div class="flex flex-col gap-4 w-full">
                     <LabeledInput
                         id="Polisnummer"
                         label="Polisnummer"
@@ -158,7 +158,7 @@
     </div>
 
     <!-- Right block -->
-    <div class="flex flex-col gap-4 py-4 px-4 bg-[#0C3966] w-full lg:w-[30%]">
+    <div class="flex flex-col gap-4 py-2 px-4 bg-[#0C3966] w-full lg:w-[30%] rounded">
         {#each fileManagers as id, index (id)}
             <div class="flex flex-col w-full bg-[#0C3966] rounded">
                 <!-- Label + cross -->

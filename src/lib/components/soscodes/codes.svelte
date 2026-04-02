@@ -88,9 +88,9 @@
         <div
             class="flex flex-row justify-between items-center bg-[#E0E0E0] rounded-t px-3 py-2 sticky top-0 z-10"
         >
-            <div class="text-black font-bold w-1/5">Datum</div>
+            <div class="text-black font-bold w-1/5 hidden sm:block">Datum</div>
             <div class="text-black font-bold w-1/5">Naam</div>
-            <div class="text-black font-bold w-1/5">Methode</div>
+            <div class="text-black font-bold w-1/5 hidden sm:block">Methode</div>
             <div class="text-black font-bold w-1/5">Status</div>
             <div class="text-black font-bold w-1/5 text-center">
                 Bewerk SOStag
@@ -101,18 +101,18 @@
             <div
                 class="flex flex-row justify-between items-center bg-[#F0F0F0] even:bg-[#FFF] rounded px-3 py-2"
             >
-                <div class="text-black font-light w-1/5">
+                <div class="text-black font-light w-1/5 hidden sm:block">
                     {payment.aanmaakdatum}
                 </div>
                 <div class="text-black font-light w-1/5">
                     {payment.omschrijving}
                 </div>
-                <div class="text-black font-light w-1/5">{payment.soscode}</div>
+                <div class="text-black font-light w-1/5 hidden sm:block">{payment.soscode}</div>
                 <div
                     class="text-black font-light w-1/5 flex items-center gap-2"
                 >
                     <span
-                        class="w-3 h-3 rounded-full"
+                        class="w-3 h-3 rounded-full hidden sm:block"
                         style="background-color: {payment.status === 'Actief'
                             ? 'green'
                             : 'red'}"
@@ -133,7 +133,6 @@
             </div>
         {/each}
     </div>
-    <EditPopUp></EditPopUp>
 </div>
 
 

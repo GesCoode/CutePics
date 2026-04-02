@@ -20,10 +20,10 @@
     }
 </script>
 
-<div class="w-full px-5 flex flex-col items-start">
-    <div class="flex flex-col lg:flex-row gap-3 self-stretch">
+<div class="w-full px-5 flex flex-col items-start px-4 md:px-8 lg:px-16 pb-4">
+    <div class="flex flex-col xl:flex-row gap-4 self-stretch">
         <!-- Left block -->
-        <div class="h-[600px] w-full lg:flex-1 flex flex-col gap-3">
+        <div class="h-[480px] xl:h-[600px] w-full xl:flex-1 flex flex-col gap-4">
             <LeftAccountBlock
                 bind:nieuwWachtwoord
                 bind:herhaalNieuwWachtwoord
@@ -34,7 +34,7 @@
         </div>
 
         <!-- Right block -->
-        <div class="h-[600px] w-full lg:flex-1 flex flex-col gap-3">
+        <div class="h-[480px] xl:h-[600px] w-full xl:flex-1 flex flex-col gap-3">
             <RightAccountBlock
                 {email}
                 bind:newsletterEnabled
@@ -46,7 +46,7 @@
         <img
             src={accountImage}
             alt="Gezellige eettafel"
-            class="hidden lg:block h-[600px] w-[360px] object-cover flex-shrink-0"
+            class="hidden xl:block h-[600px] w-[360px] object-cover flex-shrink-0"
         />
     </div>
 </div>
