@@ -10,7 +10,10 @@
   if (typeof window !== 'undefined') initTheme();
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head>
+  <link rel="icon" href={favicon} />
+  <title>HueDo</title>
+</svelte:head>
 
 <Navbar />
 
