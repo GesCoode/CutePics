@@ -1,24 +1,24 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: app-db
+    container_name: cutepics-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: app
+      POSTGRES_USER: cutepics
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: app
+      POSTGRES_DB: cutepics
     volumes:
-      - app_pg:/var/lib/postgresql/data
+      - cutepics_pg:/var/lib/postgresql/data
       - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
 
   app:
     build: .
-    container_name: app
+    container_name: cutepics
     restart: unless-stopped
     ports:
-      - '3001:3000'
+      - '3003:3000'
     environment:
-      DATABASE_URL: postgres://app:${POSTGRES_PASSWORD}@db:5432/app
+      DATABASE_URL: postgres://cutepics:${POSTGRES_PASSWORD}@db:5432/cutepics
       SESSION_SECRET: ${SESSION_SECRET}
       ORIGIN: ${ORIGIN}
       SMTP_HOST: ${SMTP_HOST}
@@ -27,9 +27,13 @@ services:
       SMTP_USER: ${SMTP_USER}
       SMTP_PASS: ${SMTP_PASS}
       SMTP_FROM: ${SMTP_FROM}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      CRON_SECRET: ${CRON_SECRET}
+      GEMINI_IMAGE_MODEL: ${GEMINI_IMAGE_MODEL:-imagen-4.0-generate-001}
+      GEMINI_FALLBACK_MODEL: ${GEMINI_FALLBACK_MODEL:-gemini-2.0-flash-preview-image-generation}
       NODE_ENV: production
     depends_on:
       - db
 
 volumes:
-  app_pg:
+  cutepics_pg:

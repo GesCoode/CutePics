@@ -31,6 +31,12 @@ async function sendEmail(options: {
   html: string;
   logLabel: string;
   logUrl?: string;
+  attachments?: Array<{
+    filename: string;
+    content: Buffer;
+    cid?: string;
+    contentType?: string;
+  }>;
 }): Promise<void> {
   if (!smtpConfigured()) {
     console.warn(`SMTP is not configured. ${options.logLabel}:`, options.logUrl ?? options.text);
@@ -43,7 +49,53 @@ async function sendEmail(options: {
     to: options.to,
     subject: options.subject,
     text: options.text,
-    html: options.html
+    html: options.html,
+    attachments: options.attachments
+  });
+}
+
+export async function sendCutePictureEmail(options: {
+  to: string;
+  subject: string;
+  headline: string;
+  body: string;
+  categoryLabel: string;
+  image: { buffer: Buffer; mimeType: string };
+  unsubscribeUrl: string;
+}): Promise<void> {
+  const ext = options.image.mimeType === 'image/jpeg' ? 'jpg' : 'png';
+  const filename = `cutepics-${Date.now()}.${ext}`;
+  const cid = 'cutepic';
+
+  const text = `${options.headline}\n\n${options.body}\n\nCategory: ${options.categoryLabel}\n\nUnsubscribe: ${options.unsubscribeUrl}`;
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 560px; margin: 0 auto; color: #5c3d52;">
+      <h1 style="color: #ff6b95; font-size: 24px;">${options.headline}</h1>
+      <p style="font-size: 16px; line-height: 1.5;">${options.body}</p>
+      <p style="font-size: 14px; color: #a88996;">Today's category: <strong>${options.categoryLabel}</strong></p>
+      <p style="margin: 24px 0;">
+        <img src="cid:${cid}" alt="${options.categoryLabel}" style="max-width: 100%; border-radius: 16px;" />
+      </p>
+      <p style="font-size: 12px; color: #a88996;">
+        <a href="${options.unsubscribeUrl}" style="color: #ff6b95;">Unsubscribe</a>
+      </p>
+    </div>
+  `;
+
+  await sendEmail({
+    to: options.to,
+    subject: options.subject,
+    text,
+    html,
+    logLabel: 'Cute picture email',
+    attachments: [
+      {
+        filename,
+        content: options.image.buffer,
+        cid,
+        contentType: options.image.mimeType
+      }
+    ]
   });
 }
 
