@@ -64,8 +64,17 @@ export async function deleteDeck(deckId: string): Promise<boolean> {
 
   if (!response.ok) return false;
 
-  const data = (await response.json()) as { decks: Deck[] };
+  const data = (await response.json()) as {
+    decks: Deck[];
+    flashcards?: import('$lib/stores/flashcards').Flashcard[];
+  };
   decks.set(data.decks);
+
+  if (data.flashcards) {
+    const { flashcards } = await import('$lib/stores/flashcards');
+    flashcards.set(data.flashcards);
+  }
+
   return true;
 }
 

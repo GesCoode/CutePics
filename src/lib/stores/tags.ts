@@ -1,8 +1,4 @@
-import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
-import { randomTagColor } from '$lib/utils/tagColors';
-
-const STORAGE_KEY = 'memlyra-tags';
 
 export type Tag = {
   id: string;
@@ -12,123 +8,104 @@ export type Tag = {
 
 export const tags = writable<Tag[]>([]);
 
-function save(items: Tag[]) {
-  if (browser) localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-}
-
-function createId(): string {
-  return crypto.randomUUID();
-}
-
-function normalizeTag(tag: Tag): Tag {
-  return {
-    ...tag,
-    color: tag.color ?? randomTagColor()
-  };
-}
-
-export function initTags() {
-  if (!browser) return;
-
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (!stored) {
+export async function loadTags(): Promise<void> {
+  const response = await fetch('/api/tags');
+  if (!response.ok) {
     tags.set([]);
     return;
   }
 
-  try {
-    const parsed = JSON.parse(stored) as Tag[];
-    const normalized = parsed.map(normalizeTag);
-    tags.set(normalized);
-    if (normalized.some((tag, index) => !parsed[index]?.color)) {
-      save(normalized);
-    }
-  } catch {
-    localStorage.removeItem(STORAGE_KEY);
-    tags.set([]);
-  }
+  const data = (await response.json()) as { tags: Tag[] };
+  tags.set(data.tags);
 }
 
-export function createTag(label: string): Tag | null {
+export function clearTags() {
+  tags.set([]);
+}
+
+export async function createTag(label: string): Promise<Tag | null> {
   const trimmed = label.trim();
   if (!trimmed) return null;
 
-  let created: Tag | null = null;
-
-  tags.update((items) => {
-    if (items.some((tag) => tag.label.toLowerCase() === trimmed.toLowerCase())) {
-      return items;
-    }
-
-    created = { id: createId(), label: trimmed, color: randomTagColor() };
-    const next = [...items, created];
-    save(next);
-    return next;
+  const response = await fetch('/api/tags', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ label: trimmed })
   });
 
-  return created;
+  if (!response.ok) return null;
+
+  const data = (await response.json()) as { tag: Tag };
+  tags.update((items) => [...items, data.tag].sort((a, b) => a.label.localeCompare(b.label)));
+  return data.tag;
 }
 
-export function findOrCreateTag(label: string): Tag | null {
+export async function findOrCreateTag(label: string): Promise<Tag | null> {
   const trimmed = label.trim();
   if (!trimmed) return null;
 
   let found: Tag | null = null;
-
   tags.update((items) => {
     const existing = items.find((tag) => tag.label.toLowerCase() === trimmed.toLowerCase());
-    if (existing) {
-      found = existing;
-      return items;
-    }
-
-    found = { id: createId(), label: trimmed, color: randomTagColor() };
-    const next = [...items, found];
-    save(next);
-    return next;
+    found = existing ?? null;
+    return items;
   });
 
-  return found;
+  if (found) return found;
+
+  return createTag(trimmed);
 }
 
-export function renameTag(tagId: string, label: string): boolean {
+export async function renameTag(tagId: string, label: string): Promise<boolean> {
   const trimmed = label.trim();
   if (!trimmed) return false;
 
-  let ok = false;
-
-  tags.update((items) => {
-    const tag = items.find((item) => item.id === tagId);
-    if (!tag) return items;
-
-    if (items.some((item) => item.id !== tagId && item.label.toLowerCase() === trimmed.toLowerCase())) {
-      return items;
-    }
-
-    ok = true;
-    if (tag.label === trimmed) return items;
-
-    const next = items.map((item) => (item.id === tagId ? { ...item, label: trimmed } : item));
-    save(next);
-    return next;
+  const response = await fetch('/api/tags', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: tagId, label: trimmed })
   });
 
-  return ok;
+  if (!response.ok) return false;
+
+  const data = (await response.json()) as { tags: Tag[] };
+  tags.set(data.tags);
+  return true;
 }
 
-export function deleteTag(tagId: string) {
-  tags.update((items) => {
-    const next = items.filter((tag) => tag.id !== tagId);
-    save(next);
-    return next;
+export async function deleteTag(tagId: string): Promise<boolean> {
+  const response = await fetch(`/api/tags?id=${encodeURIComponent(tagId)}`, {
+    method: 'DELETE'
   });
+
+  if (!response.ok) return false;
+
+  const data = (await response.json()) as {
+    tags: Tag[];
+    flashcards?: import('$lib/stores/flashcards').Flashcard[];
+  };
+  tags.set(data.tags);
+
+  if (data.flashcards) {
+    const { flashcards } = await import('$lib/stores/flashcards');
+    flashcards.set(data.flashcards);
+  }
+
+  return true;
 }
 
 export function getTagById(tagId: string, items: Tag[]): Tag | undefined {
   return items.find((tag) => tag.id === tagId);
 }
 
-export function clearAllTags() {
+export async function clearAllTags(): Promise<void> {
+  const current = await fetch('/api/tags').then((response) =>
+    response.ok ? response.json() : { tags: [] }
+  ) as { tags: Tag[] };
+
+  for (const tag of current.tags) {
+    await fetch(`/api/tags?id=${encodeURIComponent(tag.id)}`, { method: 'DELETE' });
+  }
+
   tags.set([]);
-  save([]);
 }

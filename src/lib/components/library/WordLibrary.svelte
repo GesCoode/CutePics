@@ -7,13 +7,11 @@
   import StarIcon from '$lib/components/icons/StarIcon.svelte';
   import {
     createFlashcard,
-    clearDeckFromAllFlashcards,
     deleteFlashcard,
     deleteFlashcards,
     deleteFlashcardsInDeck,
     flashcards,
     importFlashcardRows,
-    removeTagFromAllFlashcards,
     type Flashcard,
     type ImportResult
   } from '$lib/stores/flashcards';
@@ -216,7 +214,7 @@
     }, 1400);
   }
 
-  function handleAddCard(event: SubmitEvent) {
+  async function handleAddCard(event: SubmitEvent) {
     event.preventDefault();
     addError = '';
 
@@ -225,7 +223,7 @@
       return;
     }
 
-    const card = createFlashcard(wordA, wordB, addTagIds, addDeckId);
+    const card = await createFlashcard(wordA, wordB, addTagIds, addDeckId);
     if (!card) {
       addError = 'Enter both side A and side B.';
       return;
@@ -245,9 +243,9 @@
     wordAInputEl?.focus();
   }
 
-  function handleDeleteSelected() {
+  async function handleDeleteSelected() {
     if (selectedIds.length === 0) return;
-    deleteFlashcards(selectedIds);
+    await deleteFlashcards(selectedIds);
     selectedIds = [];
     panelMode = 'none';
   }
@@ -267,22 +265,19 @@
     if (!importDeckId) importDeckId = deck.id;
   }
 
-  function handleRemoveDeck(deckId: string) {
-    void (async () => {
-      await deleteDeck(deckId);
-      clearDeckFromAllFlashcards(deckId);
-      if (addDeckId === deckId) addDeckId = null;
-      if (importDeckId === deckId) importDeckId = null;
-      if (deckFilter === deckId) deckFilter = 'all';
-    })();
+  async function handleRemoveDeck(deckId: string) {
+    await deleteDeck(deckId);
+    if (addDeckId === deckId) addDeckId = null;
+    if (importDeckId === deckId) importDeckId = null;
+    if (deckFilter === deckId) deckFilter = 'all';
   }
 
-  function handleClearDeckCards(deckId: string) {
+  async function handleClearDeckCards(deckId: string) {
     const idsInDeck = $flashcards
       .filter((card) => card.deckId === deckId)
       .map((card) => card.id);
 
-    deleteFlashcardsInDeck(deckId);
+    await deleteFlashcardsInDeck(deckId);
     selectedIds = selectedIds.filter((id) => !idsInDeck.includes(id));
   }
 
@@ -310,36 +305,39 @@
   function handleConfirmAction() {
     if (!confirmAction) return;
 
-    switch (confirmAction.type) {
-      case 'remove-deck':
-        handleRemoveDeck(confirmAction.deckId);
-        break;
-      case 'clear-deck-cards':
-        handleClearDeckCards(confirmAction.deckId);
-        break;
-      case 'remove-tag':
-        handleRemoveTag(confirmAction.tagId);
-        break;
-      case 'remove-card': {
-        const { cardId } = confirmAction;
-        deleteFlashcard(cardId);
-        selectedIds = selectedIds.filter((id) => id !== cardId);
-        break;
-      }
-    }
-
+    const action = confirmAction;
     confirmAction = null;
+
+    void (async () => {
+      switch (action.type) {
+        case 'remove-deck':
+          await handleRemoveDeck(action.deckId);
+          break;
+        case 'clear-deck-cards':
+          await handleClearDeckCards(action.deckId);
+          break;
+        case 'remove-tag':
+          await handleRemoveTag(action.tagId);
+          break;
+        case 'remove-card': {
+          const { cardId } = action;
+          await deleteFlashcard(cardId);
+          selectedIds = selectedIds.filter((id) => id !== cardId);
+          break;
+        }
+      }
+    })();
   }
 
   function cancelConfirmAction() {
     confirmAction = null;
   }
 
-  function handleCreateTag(event: SubmitEvent) {
+  async function handleCreateTag(event: SubmitEvent) {
     event.preventDefault();
     tagError = '';
 
-    const tag = createTag(tagLabel);
+    const tag = await createTag(tagLabel);
     if (!tag) {
       tagError = 'Enter a tag name, or this tag already exists.';
       return;
@@ -348,9 +346,8 @@
     tagLabel = '';
   }
 
-  function handleRemoveTag(tagId: string) {
-    deleteTag(tagId);
-    removeTagFromAllFlashcards(tagId);
+  async function handleRemoveTag(tagId: string) {
+    await deleteTag(tagId);
   }
 
   function startRenameDeck(deckId: string, label: string) {
@@ -393,11 +390,11 @@
     tagRenameError = '';
   }
 
-  function saveTagRename(event: SubmitEvent) {
+  async function saveTagRename(event: SubmitEvent) {
     event.preventDefault();
     if (!editingTagId) return;
 
-    if (!renameTag(editingTagId, editingTagLabel)) {
+    if (!(await renameTag(editingTagId, editingTagLabel))) {
       tagRenameError = 'Enter a name, or another tag already uses it.';
       return;
     }
@@ -434,10 +431,10 @@
     }
   }
 
-  function handleImport(event: SubmitEvent) {
+  async function handleImport(event: SubmitEvent) {
     event.preventDefault();
 
-    importResult = importFlashcardRows(parseImportText(importText), importDeckId);
+    importResult = await importFlashcardRows(parseImportText(importText), importDeckId);
     if (importResult.imported > 0) {
       importText = '';
       importFileName = '';

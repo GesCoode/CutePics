@@ -5,6 +5,7 @@ import {
   listDecksForUser,
   renameDeckForUser
 } from '$lib/server/decks';
+import { listFlashcardsForUser } from '$lib/server/flashcards';
 import { randomTagColor } from '$lib/utils/tagColors';
 
 export const GET: RequestHandler = async ({ locals }) => {
@@ -87,6 +88,9 @@ export const DELETE: RequestHandler = async ({ locals, url }) => {
     return json({ error: 'Could not delete deck.' }, { status: 404 });
   }
 
-  const decks = await listDecksForUser(locals.user.id);
-  return json({ decks });
+  const [decks, flashcards] = await Promise.all([
+    listDecksForUser(locals.user.id),
+    listFlashcardsForUser(locals.user.id)
+  ]);
+  return json({ decks, flashcards });
 };

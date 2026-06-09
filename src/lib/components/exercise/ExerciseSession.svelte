@@ -123,7 +123,7 @@
   function recordAndAdvance(correct: boolean) {
     if (!currentCard) return;
 
-    recordExerciseResult(currentCard.cardId, correct, currentCard.direction);
+    void recordExerciseResult(currentCard.cardId, correct, currentCard.direction);
     if (correct) correctCount += 1;
     else wrongCount += 1;
     answerOutcomes.push(correct ? 'correct' : 'wrong');
@@ -140,7 +140,7 @@
   function advanceWithoutGrade() {
     if (!currentCard) return;
 
-    recordExerciseSeen(currentCard.cardId);
+    void recordExerciseSeen(currentCard.cardId);
 
     if (currentIndex >= queue.length - 1) {
       finishSession();

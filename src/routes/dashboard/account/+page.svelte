@@ -72,14 +72,16 @@
     if (!confirmAction) return;
 
     if (confirmAction === 'progress') {
-      removeProgressMetrics();
-      verification = {
-        title: 'Progress metrics removed',
-        message:
-          'All exercise stats, stars, and learned dates have been cleared from your flashcards. Your library content is unchanged.',
-        actionLabel: 'Back to account',
-        useAction: () => (verification = null)
-      };
+      void (async () => {
+        await removeProgressMetrics();
+        verification = {
+          title: 'Progress metrics removed',
+          message:
+            'All exercise stats, stars, and learned dates have been cleared from your flashcards. Your library content is unchanged.',
+          actionLabel: 'Back to account',
+          useAction: () => (verification = null)
+        };
+      })();
     } else if (confirmAction === 'library') {
       void (async () => {
         await removeLibrary();

@@ -5,8 +5,8 @@
   import Footer from '$lib/sections/Footer.svelte';
   import { setUser } from '$lib/stores/auth';
   import { clearDecks, loadDecks } from '$lib/stores/decks';
-  import { initFlashcards } from '$lib/stores/flashcards';
-  import { initTags } from '$lib/stores/tags';
+  import { clearFlashcards, loadFlashcards } from '$lib/stores/flashcards';
+  import { clearTags, loadTags } from '$lib/stores/tags';
   import { initTheme } from '$lib/stores/theme';
 
   let { children, data } = $props();
@@ -16,15 +16,17 @@
 
     if (data.user) {
       void loadDecks();
+      void loadTags();
+      void loadFlashcards();
     } else {
       clearDecks();
+      clearTags();
+      clearFlashcards();
     }
   });
 
   if (typeof window !== 'undefined') {
     initTheme();
-    initTags();
-    initFlashcards();
   }
 </script>
 

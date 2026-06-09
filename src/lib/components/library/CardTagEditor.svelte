@@ -63,7 +63,7 @@
   }
 
   function removeTag(tagId: string) {
-    updateFlashcardTags(
+    void updateFlashcardTags(
       cardId,
       tagIds.filter((id) => id !== tagId)
     );
@@ -71,7 +71,7 @@
 
   function addTag(tagId: string) {
     if (tagIds.includes(tagId)) return;
-    updateFlashcardTags(cardId, [...tagIds, tagId]);
+    void updateFlashcardTags(cardId, [...tagIds, tagId]);
     if (availableTags.length <= 1) closeMenu();
   }
 
