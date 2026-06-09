@@ -1,29 +1,39 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
+  import { goto, invalidateAll } from '$app/navigation';
   import AuthCard from '$lib/components/AuthCard.svelte';
-  import { register } from '$lib/stores/auth';
 
   let name = $state('');
   let email = $state('');
   let password = $state('');
   let error = $state('');
+  let submitting = $state(false);
 
-  function handleSubmit(event: SubmitEvent) {
+  async function handleSubmit(event: SubmitEvent) {
     event.preventDefault();
     error = '';
+    submitting = true;
 
-    if (!name.trim()) {
-      error = 'Enter an account name.';
-      return;
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, name, password })
+      });
+
+      const data = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        error = data.error ?? 'Could not create account.';
+        return;
+      }
+
+      await invalidateAll();
+      goto('/dashboard');
+    } catch {
+      error = 'Could not create account.';
+    } finally {
+      submitting = false;
     }
-
-    const created = register(email, name);
-    if (!created) {
-      error = 'An account with this email already exists.';
-      return;
-    }
-
-    goto('/dashboard');
   }
 </script>
 
@@ -34,7 +44,7 @@
 <AuthCard
   title="Create account"
   description="Start building your flashcard library."
-  submitLabel="Create account"
+  submitLabel={submitting ? 'Creating account…' : 'Create account'}
   alternateText="Already have an account? "
   alternateHref="/login"
   alternateLabel="Log in"
@@ -54,6 +64,7 @@
       placeholder="How should we greet you?"
       bind:value={name}
       required
+      disabled={submitting}
     />
   </label>
 
@@ -67,6 +78,7 @@
       placeholder="you@example.com"
       bind:value={email}
       required
+      disabled={submitting}
     />
   </label>
 
@@ -81,6 +93,7 @@
       minlength="6"
       bind:value={password}
       required
+      disabled={submitting}
     />
   </label>
 </AuthCard>

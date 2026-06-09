@@ -1,9 +1,8 @@
 <script lang="ts">
   import { browser } from '$app/environment';
-  import { goto } from '$app/navigation';
+  import { goto, invalidateAll } from '$app/navigation';
   import AccountVerification from '$lib/components/AccountVerification.svelte';
   import AuthCard from '$lib/components/AuthCard.svelte';
-  import { signIn } from '$lib/stores/auth';
 
   const VERIFICATION_KEY = 'memlyra-verification';
 
@@ -16,6 +15,7 @@
   let email = $state('');
   let password = $state('');
   let error = $state('');
+  let submitting = $state(false);
   let verification = $state<StoredVerification | null>(null);
 
   if (browser) {
@@ -30,17 +30,32 @@
     }
   }
 
-  function handleSubmit(event: SubmitEvent) {
+  async function handleSubmit(event: SubmitEvent) {
     event.preventDefault();
     error = '';
+    submitting = true;
 
-    const loggedIn = signIn(email);
-    if (!loggedIn) {
-      error = 'No account found for this email. Register first.';
-      return;
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        error = data.error ?? 'Could not sign in.';
+        return;
+      }
+
+      await invalidateAll();
+      goto('/dashboard');
+    } catch {
+      error = 'Could not sign in.';
+    } finally {
+      submitting = false;
     }
-
-    goto('/dashboard');
   }
 
   function dismissVerification() {
@@ -65,7 +80,7 @@
   <AuthCard
     title="Welcome back"
     description="Sign in to continue learning."
-    submitLabel="Log in"
+    submitLabel={submitting ? 'Signing in…' : 'Log in'}
     alternateText="Need an account? "
     alternateHref="/register"
     alternateLabel="Register"
@@ -85,6 +100,7 @@
         placeholder="you@example.com"
         bind:value={email}
         required
+        disabled={submitting}
       />
     </label>
 
@@ -98,6 +114,7 @@
         placeholder="••••••••"
         bind:value={password}
         required
+        disabled={submitting}
       />
     </label>
   </AuthCard>

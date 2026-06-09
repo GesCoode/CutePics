@@ -49,12 +49,15 @@
     profileMessage = '';
     profileError = '';
 
-    if (!updateProfile(displayName)) {
-      profileError = 'Enter a display name to save your profile.';
-      return;
-    }
+    void (async () => {
+      const updated = await updateProfile(displayName);
+      if (!updated) {
+        profileError = 'Enter a display name to save your profile.';
+        return;
+      }
 
-    profileMessage = 'Profile updated.';
+      profileMessage = 'Profile updated.';
+    })();
   }
 
   function openConfirm(action: ConfirmAction) {
@@ -88,21 +91,26 @@
       };
     } else if (confirmAction === 'account') {
       removeLibrary();
-      deleteCurrentAccount();
 
-      if (browser) {
-        sessionStorage.setItem(
-          'memlyra-verification',
-          JSON.stringify({
-            title: 'Account removed',
-            message:
-              'Your account and all saved learning data on this account have been permanently deleted.',
-            actionLabel: 'Continue to log in'
-          })
-        );
-      }
+      void (async () => {
+        const removed = await deleteCurrentAccount();
+        if (!removed) return;
 
-      goto('/login');
+        if (browser) {
+          sessionStorage.setItem(
+            'memlyra-verification',
+            JSON.stringify({
+              title: 'Account removed',
+              message:
+                'Your account and all saved learning data on this account have been permanently deleted.',
+              actionLabel: 'Continue to log in'
+            })
+          );
+        }
+
+        goto('/login');
+      })();
+
       confirmAction = null;
       return;
     }

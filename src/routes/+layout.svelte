@@ -3,17 +3,20 @@
   import favicon from '$lib/assets/favicon.svg';
   import Navbar from '$lib/sections/Navbar.svelte';
   import Footer from '$lib/sections/Footer.svelte';
-  import { initAuth } from '$lib/stores/auth';
+  import { setUser } from '$lib/stores/auth';
   import { initDecks } from '$lib/stores/decks';
   import { initFlashcards } from '$lib/stores/flashcards';
   import { initTags } from '$lib/stores/tags';
   import { initTheme } from '$lib/stores/theme';
 
-  let { children } = $props();
+  let { children, data } = $props();
+
+  $effect(() => {
+    setUser(data.user);
+  });
 
   if (typeof window !== 'undefined') {
     initTheme();
-    initAuth();
     initDecks();
     initTags();
     initFlashcards();

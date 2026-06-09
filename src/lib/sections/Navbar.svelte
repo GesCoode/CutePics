@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
+  import { goto, invalidateAll } from '$app/navigation';
   import { page } from '$app/stores';
   import favicon from '$lib/assets/favicon.svg';
   import { isLoggedIn, signOut } from '$lib/stores/auth';
@@ -11,7 +11,8 @@
   ];
 
   async function handleSignOut() {
-    signOut();
+    await signOut();
+    await invalidateAll();
     goto('/login');
   }
 </script>
