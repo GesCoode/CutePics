@@ -4,7 +4,7 @@
   import Navbar from '$lib/sections/Navbar.svelte';
   import Footer from '$lib/sections/Footer.svelte';
   import { setUser } from '$lib/stores/auth';
-  import { initDecks } from '$lib/stores/decks';
+  import { clearDecks, loadDecks } from '$lib/stores/decks';
   import { initFlashcards } from '$lib/stores/flashcards';
   import { initTags } from '$lib/stores/tags';
   import { initTheme } from '$lib/stores/theme';
@@ -13,11 +13,16 @@
 
   $effect(() => {
     setUser(data.user);
+
+    if (data.user) {
+      void loadDecks();
+    } else {
+      clearDecks();
+    }
   });
 
   if (typeof window !== 'undefined') {
     initTheme();
-    initDecks();
     initTags();
     initFlashcards();
   }
@@ -29,7 +34,7 @@
 </svelte:head>
 
 <div class="page-backdrop flex min-h-screen flex-col">
-  <Navbar />
+  <Navbar user={data.user} />
 
   <main class="flex-1">
     {@render children()}

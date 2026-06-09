@@ -1,6 +1,7 @@
 <script lang="ts">
   import { browser } from '$app/environment';
   import { goto, invalidateAll } from '$app/navigation';
+  import { page } from '$app/stores';
   import AccountVerification from '$lib/components/AccountVerification.svelte';
   import AuthCard from '$lib/components/AuthCard.svelte';
 
@@ -17,6 +18,12 @@
   let error = $state('');
   let submitting = $state(false);
   let verification = $state<StoredVerification | null>(null);
+
+  let notice = $derived(
+    $page.url.searchParams.get('verified') === '1'
+      ? 'Your account has been activated. You can sign in now.'
+      : ''
+  );
 
   if (browser) {
     const stored = sessionStorage.getItem(VERIFICATION_KEY);
@@ -50,7 +57,7 @@
       }
 
       await invalidateAll();
-      goto('/dashboard');
+      goto('/dashboard', { replaceState: true });
     } catch {
       error = 'Could not sign in.';
     } finally {
@@ -86,6 +93,10 @@
     alternateLabel="Register"
     onsubmit={handleSubmit}
   >
+    {#if notice}
+      <p class="library-message library-message-success">{notice}</p>
+    {/if}
+
     {#if error}
       <p class="library-message library-message-error">{error}</p>
     {/if}

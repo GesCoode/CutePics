@@ -6,8 +6,8 @@ export function removeProgressMetrics() {
   clearProgressMetrics();
 }
 
-export function removeLibrary() {
+export async function removeLibrary() {
   clearAllFlashcards();
-  clearAllDecks();
+  await clearAllDecks();
   clearAllTags();
 }

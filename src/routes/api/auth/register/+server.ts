@@ -1,14 +1,10 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
-import {
-  clearSessionCookie,
-  createSession,
-  createUser,
-  findUserByEmail,
-  setSessionCookie,
-  verifyPassword
-} from '$lib/server/auth';
+import { cookieIsSecure, createUser, findUserByEmail } from '$lib/server/auth';
+import { createBaseDeckForUser } from '$lib/server/decks';
+import { sendVerificationEmail } from '$lib/server/mail';
+import { getAppOrigin } from '$lib/server/origin';
 
-export const POST: RequestHandler = async ({ request, cookies }) => {
+export const POST: RequestHandler = async ({ request, url }) => {
   let body: { email?: string; name?: string; password?: string };
 
   try {
@@ -34,9 +30,14 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
     return json({ error: 'An account with this email already exists.' }, { status: 409 });
   }
 
-  const user = await createUser(email, name, password);
-  const session = await createSession(user.id);
-  setSessionCookie(cookies, session.id, session.expiresAt);
+  const { user, verificationToken } = await createUser(email, name, password);
+  await createBaseDeckForUser(user.id);
 
-  return json({ user });
+  const verifyUrl = `${getAppOrigin(url)}/verify?token=${verificationToken}`;
+  await sendVerificationEmail(user.email, verifyUrl);
+
+  return json({
+    message: 'Check your email to activate your account.',
+    email: user.email
+  });
 };

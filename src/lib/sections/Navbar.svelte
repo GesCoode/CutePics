@@ -2,13 +2,17 @@
   import { goto, invalidateAll } from '$app/navigation';
   import { page } from '$app/stores';
   import favicon from '$lib/assets/favicon.svg';
-  import { isLoggedIn, signOut } from '$lib/stores/auth';
+  import { signOut, type User } from '$lib/stores/auth';
+
+  let { user = null }: { user?: User | null } = $props();
 
   const publicLinks = [
     { href: '/', label: 'Home' },
     { href: '/login', label: 'Log in' },
     { href: '/register', label: 'Register' }
   ];
+
+  const isLoggedIn = $derived(user !== null);
 
   async function handleSignOut() {
     await signOut();
@@ -19,7 +23,7 @@
 
 <header class="sticky top-0 z-20 border-b border-border bg-background/70 backdrop-blur-xl pt-[env(safe-area-inset-top)]">
   <div class="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-3 sm:gap-3 sm:px-6 sm:py-4">
-    <a href={$isLoggedIn ? '/dashboard' : '/'} class="group flex min-w-0 items-center gap-2 sm:gap-3">
+    <a href={isLoggedIn ? '/dashboard' : '/'} class="group flex min-w-0 items-center gap-2 sm:gap-3">
       <span
         class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-border bg-surface/80 transition group-hover:border-border-strong sm:h-10 sm:w-10"
       >
@@ -29,7 +33,7 @@
     </a>
 
     <nav class="flex shrink-0 flex-wrap items-center justify-end gap-0.5 sm:gap-2">
-      {#if $isLoggedIn}
+      {#if isLoggedIn}
         <a
           class="nav-link {$page.url.pathname === '/dashboard' ? 'nav-link-active' : ''}"
           href="/dashboard"

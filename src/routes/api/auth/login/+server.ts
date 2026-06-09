@@ -1,12 +1,13 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 import {
+  cookieIsSecure,
   createSession,
   findUserByEmail,
   setSessionCookie,
   verifyPassword
 } from '$lib/server/auth';
 
-export const POST: RequestHandler = async ({ request, cookies }) => {
+export const POST: RequestHandler = async ({ request, cookies, url }) => {
   let body: { email?: string; password?: string };
 
   try {
@@ -27,8 +28,15 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
     return json({ error: 'Invalid email or password.' }, { status: 401 });
   }
 
+  if (!account.email_verified) {
+    return json(
+      { error: 'Please verify your email before signing in. Check your inbox for the activation link.' },
+      { status: 403 }
+    );
+  }
+
   const session = await createSession(account.id);
-  setSessionCookie(cookies, session.id, session.expiresAt);
+  setSessionCookie(cookies, session.id, session.expiresAt, cookieIsSecure(url));
 
   return json({
     user: {

@@ -1,16 +1,17 @@
 <script lang="ts">
-  import { goto, invalidateAll } from '$app/navigation';
   import AuthCard from '$lib/components/AuthCard.svelte';
 
   let name = $state('');
   let email = $state('');
   let password = $state('');
   let error = $state('');
+  let success = $state('');
   let submitting = $state(false);
 
   async function handleSubmit(event: SubmitEvent) {
     event.preventDefault();
     error = '';
+    success = '';
     submitting = true;
 
     try {
@@ -20,15 +21,17 @@
         body: JSON.stringify({ email, name, password })
       });
 
-      const data = (await response.json()) as { error?: string };
+      const data = (await response.json()) as { error?: string; message?: string; email?: string };
 
       if (!response.ok) {
         error = data.error ?? 'Could not create account.';
         return;
       }
 
-      await invalidateAll();
-      goto('/dashboard');
+      success = data.message ?? 'Check your email to activate your account.';
+      email = '';
+      name = '';
+      password = '';
     } catch {
       error = 'Could not create account.';
     } finally {
@@ -50,6 +53,10 @@
   alternateLabel="Log in"
   onsubmit={handleSubmit}
 >
+  {#if success}
+    <p class="library-message library-message-success">{success}</p>
+  {/if}
+
   {#if error}
     <p class="library-message library-message-error">{error}</p>
   {/if}

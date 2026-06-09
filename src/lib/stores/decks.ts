@@ -1,8 +1,4 @@
-import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
-import { randomTagColor } from '$lib/utils/tagColors';
-
-const STORAGE_KEY = 'memlyra-decks';
 
 export type Deck = {
   id: string;
@@ -12,101 +8,79 @@ export type Deck = {
 
 export const decks = writable<Deck[]>([]);
 
-function save(items: Deck[]) {
-  if (browser) localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-}
-
-function createId(): string {
-  return crypto.randomUUID();
-}
-
-function normalizeDeck(deck: Deck): Deck {
-  return {
-    ...deck,
-    color: deck.color ?? randomTagColor()
-  };
-}
-
-export function initDecks() {
-  if (!browser) return;
-
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (!stored) {
+export async function loadDecks(): Promise<void> {
+  const response = await fetch('/api/decks');
+  if (!response.ok) {
     decks.set([]);
     return;
   }
 
-  try {
-    const parsed = JSON.parse(stored) as Deck[];
-    const normalized = parsed.map(normalizeDeck);
-    decks.set(normalized);
-    if (normalized.some((deck, index) => !parsed[index]?.color)) {
-      save(normalized);
-    }
-  } catch {
-    localStorage.removeItem(STORAGE_KEY);
-    decks.set([]);
-  }
+  const data = (await response.json()) as { decks: Deck[] };
+  decks.set(data.decks);
 }
 
-export function createDeck(label: string): Deck | null {
+export function clearDecks() {
+  decks.set([]);
+}
+
+export async function createDeck(label: string): Promise<Deck | null> {
   const trimmed = label.trim();
   if (!trimmed) return null;
 
-  let created: Deck | null = null;
-
-  decks.update((items) => {
-    if (items.some((deck) => deck.label.toLowerCase() === trimmed.toLowerCase())) {
-      return items;
-    }
-
-    created = { id: createId(), label: trimmed, color: randomTagColor() };
-    const next = [...items, created];
-    save(next);
-    return next;
+  const response = await fetch('/api/decks', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ label: trimmed })
   });
 
-  return created;
+  if (!response.ok) return null;
+
+  const data = (await response.json()) as { deck: Deck };
+  decks.update((items) => [...items, data.deck].sort((a, b) => a.label.localeCompare(b.label)));
+  return data.deck;
 }
 
-export function renameDeck(deckId: string, label: string): boolean {
+export async function renameDeck(deckId: string, label: string): Promise<boolean> {
   const trimmed = label.trim();
   if (!trimmed) return false;
 
-  let ok = false;
-
-  decks.update((items) => {
-    const deck = items.find((item) => item.id === deckId);
-    if (!deck) return items;
-
-    if (items.some((item) => item.id !== deckId && item.label.toLowerCase() === trimmed.toLowerCase())) {
-      return items;
-    }
-
-    ok = true;
-    if (deck.label === trimmed) return items;
-
-    const next = items.map((item) => (item.id === deckId ? { ...item, label: trimmed } : item));
-    save(next);
-    return next;
+  const response = await fetch('/api/decks', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: deckId, label: trimmed })
   });
 
-  return ok;
+  if (!response.ok) return false;
+
+  const data = (await response.json()) as { decks: Deck[] };
+  decks.set(data.decks);
+  return true;
 }
 
-export function deleteDeck(deckId: string) {
-  decks.update((items) => {
-    const next = items.filter((deck) => deck.id !== deckId);
-    save(next);
-    return next;
+export async function deleteDeck(deckId: string): Promise<boolean> {
+  const response = await fetch(`/api/decks?id=${encodeURIComponent(deckId)}`, {
+    method: 'DELETE'
   });
+
+  if (!response.ok) return false;
+
+  const data = (await response.json()) as { decks: Deck[] };
+  decks.set(data.decks);
+  return true;
 }
 
 export function getDeckById(deckId: string, items: Deck[]): Deck | undefined {
   return items.find((deck) => deck.id === deckId);
 }
 
-export function clearAllDecks() {
+export async function clearAllDecks(): Promise<void> {
+  const current = await fetch('/api/decks').then((response) =>
+    response.ok ? response.json() : { decks: [] }
+  ) as { decks: Deck[] };
+
+  for (const deck of current.decks) {
+    await fetch(`/api/decks?id=${encodeURIComponent(deck.id)}`, { method: 'DELETE' });
+  }
+
   decks.set([]);
-  save([]);
 }

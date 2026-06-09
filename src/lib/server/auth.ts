@@ -1,10 +1,10 @@
 import bcrypt from 'bcryptjs';
-import { dev } from '$app/environment';
 import { randomBytes } from 'node:crypto';
 import { getSql } from '$lib/server/db';
 
 export const SESSION_COOKIE = 'memlyra_session';
 const SESSION_DAYS = 30;
+const VERIFICATION_DAYS = 2;
 const BCRYPT_ROUNDS = 12;
 
 export type SessionUser = {
@@ -19,6 +19,7 @@ type DbUser = {
   email: string;
   name: string;
   password_hash: string;
+  email_verified: boolean;
   created_at: Date;
 };
 
@@ -43,6 +44,12 @@ function sessionExpiryDate(): Date {
   return expiresAt;
 }
 
+function verificationExpiryDate(): Date {
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + VERIFICATION_DAYS);
+  return expiresAt;
+}
+
 export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, BCRYPT_ROUNDS);
 }
@@ -54,7 +61,7 @@ export async function verifyPassword(password: string, passwordHash: string): Pr
 export async function findUserByEmail(email: string): Promise<DbUser | null> {
   const sql = getSql();
   const rows = await sql<DbUser[]>`
-    SELECT id, email, name, password_hash, created_at
+    SELECT id, email, name, password_hash, email_verified, created_at
     FROM users
     WHERE lower(email) = ${normalizeEmail(email)}
     LIMIT 1
@@ -63,19 +70,67 @@ export async function findUserByEmail(email: string): Promise<DbUser | null> {
   return rows[0] ?? null;
 }
 
-export async function createUser(email: string, name: string, password: string): Promise<SessionUser> {
+export async function createUser(
+  email: string,
+  name: string,
+  password: string
+): Promise<{ user: SessionUser; verificationToken: string }> {
   const sql = getSql();
   const normalizedEmail = normalizeEmail(email);
   const trimmedName = name.trim();
   const passwordHash = await hashPassword(password);
 
   const rows = await sql<UserRow[]>`
-    INSERT INTO users (email, name, password_hash)
-    VALUES (${normalizedEmail}, ${trimmedName}, ${passwordHash})
+    INSERT INTO users (email, name, password_hash, email_verified)
+    VALUES (${normalizedEmail}, ${trimmedName}, ${passwordHash}, FALSE)
     RETURNING id, email, name, created_at
   `;
 
-  return toSessionUser(rows[0]);
+  const user = toSessionUser(rows[0]);
+  const verificationToken = await createVerificationToken(user.id);
+
+  return { user, verificationToken };
+}
+
+export async function createVerificationToken(userId: string): Promise<string> {
+  const sql = getSql();
+  const id = randomBytes(32).toString('hex');
+  const expiresAt = verificationExpiryDate();
+
+  await sql`DELETE FROM email_verification_tokens WHERE user_id = ${userId}`;
+  await sql`
+    INSERT INTO email_verification_tokens (id, user_id, expires_at)
+    VALUES (${id}, ${userId}, ${expiresAt})
+  `;
+
+  return id;
+}
+
+export async function verifyEmailWithToken(token: string): Promise<boolean> {
+  const sql = getSql();
+
+  const rows = await sql<{ user_id: string }[]>`
+    SELECT user_id
+    FROM email_verification_tokens
+    WHERE id = ${token}
+      AND expires_at > NOW()
+    LIMIT 1
+  `;
+
+  const match = rows[0];
+  if (!match) {
+    await sql`DELETE FROM email_verification_tokens WHERE id = ${token}`;
+    return false;
+  }
+
+  await sql`
+    UPDATE users
+    SET email_verified = TRUE
+    WHERE id = ${match.user_id}
+  `;
+  await sql`DELETE FROM email_verification_tokens WHERE user_id = ${match.user_id}`;
+
+  return true;
 }
 
 export async function createSession(userId: string): Promise<{ id: string; expiresAt: Date }> {
@@ -105,6 +160,7 @@ export async function validateSession(sessionId: string): Promise<SessionUser | 
     JOIN users u ON u.id = s.user_id
     WHERE s.id = ${sessionId}
       AND s.expires_at > NOW()
+      AND u.email_verified = TRUE
     LIMIT 1
   `;
 
@@ -139,17 +195,22 @@ export async function deleteUser(userId: string): Promise<void> {
 export function setSessionCookie(
   cookies: import('@sveltejs/kit').Cookies,
   sessionId: string,
-  expiresAt: Date
+  expiresAt: Date,
+  secure: boolean
 ): void {
   cookies.set(SESSION_COOKIE, sessionId, {
     path: '/',
     httpOnly: true,
     sameSite: 'lax',
-    secure: !dev,
+    secure,
     expires: expiresAt
   });
 }
 
 export function clearSessionCookie(cookies: import('@sveltejs/kit').Cookies): void {
   cookies.delete(SESSION_COOKIE, { path: '/' });
+}
+
+export function cookieIsSecure(url: URL): boolean {
+  return url.protocol === 'https:';
 }

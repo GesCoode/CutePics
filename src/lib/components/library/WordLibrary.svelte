@@ -252,11 +252,11 @@
     panelMode = 'none';
   }
 
-  function handleCreateDeck(event: SubmitEvent) {
+  async function handleCreateDeck(event: SubmitEvent) {
     event.preventDefault();
     deckError = '';
 
-    const deck = createDeck(deckLabel);
+    const deck = await createDeck(deckLabel);
     if (!deck) {
       deckError = 'Enter a deck name, or this deck already exists.';
       return;
@@ -268,11 +268,13 @@
   }
 
   function handleRemoveDeck(deckId: string) {
-    deleteDeck(deckId);
-    clearDeckFromAllFlashcards(deckId);
-    if (addDeckId === deckId) addDeckId = null;
-    if (importDeckId === deckId) importDeckId = null;
-    if (deckFilter === deckId) deckFilter = 'all';
+    void (async () => {
+      await deleteDeck(deckId);
+      clearDeckFromAllFlashcards(deckId);
+      if (addDeckId === deckId) addDeckId = null;
+      if (importDeckId === deckId) importDeckId = null;
+      if (deckFilter === deckId) deckFilter = 'all';
+    })();
   }
 
   function handleClearDeckCards(deckId: string) {
@@ -365,11 +367,11 @@
     deckRenameError = '';
   }
 
-  function saveDeckRename(event: SubmitEvent) {
+  async function saveDeckRename(event: SubmitEvent) {
     event.preventDefault();
     if (!editingDeckId) return;
 
-    if (!renameDeck(editingDeckId, editingDeckLabel)) {
+    if (!(await renameDeck(editingDeckId, editingDeckLabel))) {
       deckRenameError = 'Enter a name, or another deck already uses it.';
       return;
     }

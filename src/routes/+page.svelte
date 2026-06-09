@@ -1,6 +1,10 @@
 <script lang="ts">
   import HomeFlashcard from '$lib/components/home/HomeFlashcard.svelte';
-  import { isLoggedIn } from '$lib/stores/auth';
+  import type { PageData } from './$types';
+
+  let { data }: { data: PageData } = $props();
+
+  const isLoggedIn = $derived(data.user !== null);
 </script>
 
 <svelte:head>
@@ -19,7 +23,7 @@
         have learned. Your cards and progress are saved to your account.
       </p>
 
-      {#if !$isLoggedIn}
+      {#if !isLoggedIn}
         <p class="home-free-note">Free to use</p>
 
         <div class="mt-8 flex flex-wrap gap-3">
@@ -33,7 +37,7 @@
       {/if}
     </div>
 
-    {#if !$isLoggedIn}
+    {#if !isLoggedIn}
       <div class="home-hero__card">
         <HomeFlashcard />
       </div>

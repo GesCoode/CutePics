@@ -81,18 +81,19 @@
         useAction: () => (verification = null)
       };
     } else if (confirmAction === 'library') {
-      removeLibrary();
-      verification = {
-        title: 'Library removed',
-        message:
-          'All flashcards, decks, and tags have been deleted from this account. Your account is still active.',
-        actionLabel: 'Back to account',
-        useAction: () => (verification = null)
-      };
-    } else if (confirmAction === 'account') {
-      removeLibrary();
-
       void (async () => {
+        await removeLibrary();
+        verification = {
+          title: 'Library removed',
+          message:
+            'All flashcards, decks, and tags have been deleted from this account. Your account is still active.',
+          actionLabel: 'Back to account',
+          useAction: () => (verification = null)
+        };
+      })();
+    } else if (confirmAction === 'account') {
+      void (async () => {
+        await removeLibrary();
         const removed = await deleteCurrentAccount();
         if (!removed) return;
 

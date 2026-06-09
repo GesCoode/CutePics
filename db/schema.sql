@@ -5,7 +5,14 @@ CREATE TABLE users (
   email TEXT NOT NULL UNIQUE,
   name TEXT NOT NULL,
   password_hash TEXT NOT NULL,
+  email_verified BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE email_verification_tokens (
+  id TEXT PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  expires_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE sessions (
@@ -57,3 +64,4 @@ CREATE INDEX idx_decks_user ON decks(user_id);
 CREATE INDEX idx_tags_user ON tags(user_id);
 CREATE INDEX idx_flashcards_user ON flashcards(user_id);
 CREATE INDEX idx_sessions_user ON sessions(user_id);
+CREATE INDEX idx_verification_tokens_user ON email_verification_tokens(user_id);

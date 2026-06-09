@@ -22,6 +22,13 @@ services:
     environment:
       DATABASE_URL: postgres://memlyra:${POSTGRES_PASSWORD}@db:5432/memlyra
       SESSION_SECRET: ${SESSION_SECRET}
+      ORIGIN: ${ORIGIN}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_SECURE: ${SMTP_SECURE}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_FROM: ${SMTP_FROM}
       NODE_ENV: production
     depends_on:
       - db
