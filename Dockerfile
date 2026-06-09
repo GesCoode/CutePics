@@ -1,27 +1,24 @@
-# Build stage (only needed if you have a framework build step)
 FROM node:20-alpine AS build
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY . .
 RUN npm run build
 
+FROM node:20-alpine
 
-# Production stage
-FROM nginx:alpine
+WORKDIR /app
 
-# Remove default nginx website
-RUN rm -rf /usr/share/nginx/html/*
+COPY --from=build /app/build ./build
+COPY --from=build /app/package*.json ./
+RUN npm ci --omit=dev
 
-# Copy build output (adjust if your framework uses different folder)
-COPY --from=build /app/dist /usr/share/nginx/html
+ENV HOST=0.0.0.0
+ENV PORT=3000
 
-# Custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 3000
 
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["node", "build"]
