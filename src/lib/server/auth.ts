@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import { env } from '$env/dynamic/private';
 import { randomBytes } from 'node:crypto';
 import { getSql } from '$lib/server/db';
 
@@ -212,5 +213,7 @@ export function clearSessionCookie(cookies: import('@sveltejs/kit').Cookies): vo
 }
 
 export function cookieIsSecure(url: URL): boolean {
+  const origin = env.ORIGIN?.replace(/\/$/, '');
+  if (origin?.startsWith('https://')) return true;
   return url.protocol === 'https:';
 }
