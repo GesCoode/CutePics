@@ -15,17 +15,15 @@
   <div class="home-hero">
     <div class="home-hero__copy">
       <h1 class="font-display text-4xl font-semibold leading-[1.05] tracking-tight text-heading sm:text-5xl md:text-6xl">
-        Study with flashcards
+        Your <span class="home-hero__free">FREE</span> study platform
       </h1>
 
       <p class="mt-6 max-w-lg text-lg leading-relaxed text-muted">
-        MemLyra is a place to make flashcards, practice them in exercises, and see what you
-        have learned. Your cards and progress are saved to your account.
+        <span class="home-hero__brand">MemLyra</span> is your free platform to create, store and practice
+        flashcards. Choose your type of exercise, track your progress and ace your goals.
       </p>
 
       {#if !isLoggedIn}
-        <p class="home-free-note">Free to use</p>
-
         <div class="mt-8 flex flex-wrap gap-3">
           <a class="btn-primary" href="/register">Create account</a>
           <a class="btn-secondary" href="/login">Log in</a>
@@ -46,21 +44,22 @@
 
   <div class="home-features grid gap-4 sm:grid-cols-3">
     <article class="feature-card">
-      <p class="text-sm font-semibold text-heading">Library</p>
-      <p class="mt-2 text-sm leading-relaxed text-muted">
-        Add flashcards, assign decks and tags, and import lists from a file.
+      <h2 class="feature-card__title">Access Anywhere</h2>
+      <p class="feature-card__desc">
+        Use our tools to create and import decks of cards into your personal library and access
+        them everywhere.
       </p>
     </article>
     <article class="feature-card">
-      <p class="text-sm font-semibold text-heading">Exercises</p>
-      <p class="mt-2 text-sm leading-relaxed text-muted">
-        Practice your cards with filters, quiz types, and both directions.
+      <h2 class="feature-card__title">Exercises</h2>
+      <p class="feature-card__desc">
+        Pick a quiz type and start practicing your flashcards.
       </p>
     </article>
     <article class="feature-card">
-      <p class="text-sm font-semibold text-heading">Progress</p>
-      <p class="mt-2 text-sm leading-relaxed text-muted">
-        Stars mark cards you have learned, mastered, or know both ways.
+      <h2 class="feature-card__title">Progress</h2>
+      <p class="feature-card__desc">
+        Follow your progress and see statistics on how fast you are improving.
       </p>
     </article>
   </div>
