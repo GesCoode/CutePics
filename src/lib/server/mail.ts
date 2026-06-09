@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { env } from '$env/dynamic/private';
+import { APP_NAME } from '$lib/app';
 
 function smtpConfigured(): boolean {
   return Boolean(env.SMTP_HOST && env.SMTP_FROM);
@@ -47,7 +48,7 @@ async function sendEmail(options: {
 }
 
 export async function sendVerificationEmail(to: string, verifyUrl: string): Promise<void> {
-  const subject = 'Activate your MemLyra account';
+  const subject = `Activate your ${APP_NAME} account`;
   const text = `Click this link to activate your account: ${verifyUrl}\n\nIf this was not you, then ignore this mail.`;
   const html = `
     <p>Click this link to activate your account:</p>
@@ -66,7 +67,7 @@ export async function sendVerificationEmail(to: string, verifyUrl: string): Prom
 }
 
 export async function sendPasswordResetEmail(to: string, resetUrl: string): Promise<void> {
-  const subject = 'Reset your MemLyra password';
+  const subject = `Reset your ${APP_NAME} password`;
   const text = `Click this link to reset your password: ${resetUrl}\n\nThis link expires in one hour. If this was not you, ignore this email.`;
   const html = `
     <p>Click this link to reset your password:</p>
