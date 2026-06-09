@@ -16,13 +16,18 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   const { pathname } = event.url;
   const isProtected = protectedPrefixes.some((prefix) => pathname.startsWith(prefix));
-  const isAuthPage = pathname === '/login' || pathname === '/register';
+  const guestAuthPages = new Set([
+    '/login',
+    '/register',
+    '/forgot-password',
+    '/reset-password'
+  ]);
 
   if (isProtected && !event.locals.user) {
     throw redirect(303, '/login');
   }
 
-  if (isAuthPage && event.locals.user) {
+  if (guestAuthPages.has(pathname) && event.locals.user) {
     throw redirect(303, '/dashboard');
   }
 

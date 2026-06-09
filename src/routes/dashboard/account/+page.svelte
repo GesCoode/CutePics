@@ -5,6 +5,7 @@
   import ConfirmDialog from '$lib/components/ConfirmDialog.svelte';
   import ThemeToggle from '$lib/components/ThemeToggle.svelte';
   import {
+    changePassword,
     deleteCurrentAccount,
     getAccountStartDate,
     updateProfile,
@@ -27,6 +28,11 @@
   let displayName = $state('');
   let profileMessage = $state('');
   let profileError = $state('');
+  let currentPassword = $state('');
+  let newPassword = $state('');
+  let confirmPassword = $state('');
+  let passwordMessage = $state('');
+  let passwordError = $state('');
   let confirmAction = $state<ConfirmAction | null>(null);
   let verification = $state<VerificationView | null>(null);
 
@@ -43,6 +49,35 @@
         })
       : ''
   );
+
+  function savePassword(event: SubmitEvent) {
+    event.preventDefault();
+    passwordMessage = '';
+    passwordError = '';
+
+    if (newPassword.length < 6) {
+      passwordError = 'New password must be at least 6 characters.';
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      passwordError = 'New passwords do not match.';
+      return;
+    }
+
+    void (async () => {
+      const result = await changePassword(currentPassword, newPassword);
+      if (!result.ok) {
+        passwordError = result.error;
+        return;
+      }
+
+      currentPassword = '';
+      newPassword = '';
+      confirmPassword = '';
+      passwordMessage = 'Password updated.';
+    })();
+  }
 
   function saveProfile(event: SubmitEvent) {
     event.preventDefault();
@@ -190,6 +225,57 @@
           {/if}
 
           <button class="btn-secondary account-panel__action" type="submit">Save profile</button>
+        </form>
+      </section>
+
+      <section class="account-panel glass-panel">
+        <h2 class="account-panel__title">Password</h2>
+        <p class="account-panel__desc">Update the password you use to sign in.</p>
+
+        <form class="account-profile-form" onsubmit={savePassword}>
+          <label class="account-field">
+            <span class="field-label">Current password</span>
+            <input
+              class="field-input"
+              type="password"
+              bind:value={currentPassword}
+              autocomplete="current-password"
+              required
+            />
+          </label>
+
+          <label class="account-field">
+            <span class="field-label">New password</span>
+            <input
+              class="field-input"
+              type="password"
+              bind:value={newPassword}
+              autocomplete="new-password"
+              required
+              minlength="6"
+            />
+          </label>
+
+          <label class="account-field">
+            <span class="field-label">Confirm new password</span>
+            <input
+              class="field-input"
+              type="password"
+              bind:value={confirmPassword}
+              autocomplete="new-password"
+              required
+              minlength="6"
+            />
+          </label>
+
+          {#if passwordError}
+            <p class="library-message library-message-error">{passwordError}</p>
+          {/if}
+          {#if passwordMessage}
+            <p class="library-message library-message-success">{passwordMessage}</p>
+          {/if}
+
+          <button class="btn-secondary account-panel__action" type="submit">Update password</button>
         </form>
       </section>
 

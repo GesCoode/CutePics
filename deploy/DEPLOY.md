@@ -29,6 +29,12 @@ git pull
 docker compose up -d --build
 ```
 
+### Run a database migration
+
+```bash
+docker exec -i memlyra-db psql -U memlyra -d memlyra < db/migrations/003_password_reset.sql
+```
+
 ## Nginx
 
 Config template: `deploy/nginx/memlyra.conf`

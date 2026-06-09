@@ -23,6 +23,29 @@ function createTransport() {
   });
 }
 
+async function sendEmail(options: {
+  to: string;
+  subject: string;
+  text: string;
+  html: string;
+  logLabel: string;
+  logUrl?: string;
+}): Promise<void> {
+  if (!smtpConfigured()) {
+    console.warn(`SMTP is not configured. ${options.logLabel}:`, options.logUrl ?? options.text);
+    return;
+  }
+
+  const transport = createTransport();
+  await transport.sendMail({
+    from: env.SMTP_FROM,
+    to: options.to,
+    subject: options.subject,
+    text: options.text,
+    html: options.html
+  });
+}
+
 export async function sendVerificationEmail(to: string, verifyUrl: string): Promise<void> {
   const subject = 'Activate your MemLyra account';
   const text = `Click this link to activate your account: ${verifyUrl}\n\nIf this was not you, then ignore this mail.`;
@@ -32,17 +55,31 @@ export async function sendVerificationEmail(to: string, verifyUrl: string): Prom
     <p>If this was not you, then ignore this mail.</p>
   `;
 
-  if (!smtpConfigured()) {
-    console.warn('SMTP is not configured. Verification link:', verifyUrl);
-    return;
-  }
-
-  const transport = createTransport();
-  await transport.sendMail({
-    from: env.SMTP_FROM,
+  await sendEmail({
     to,
     subject,
     text,
-    html
+    html,
+    logLabel: 'Verification link',
+    logUrl: verifyUrl
+  });
+}
+
+export async function sendPasswordResetEmail(to: string, resetUrl: string): Promise<void> {
+  const subject = 'Reset your MemLyra password';
+  const text = `Click this link to reset your password: ${resetUrl}\n\nThis link expires in one hour. If this was not you, ignore this email.`;
+  const html = `
+    <p>Click this link to reset your password:</p>
+    <p><a href="${resetUrl}">${resetUrl}</a></p>
+    <p>This link expires in one hour. If this was not you, ignore this email.</p>
+  `;
+
+  await sendEmail({
+    to,
+    subject,
+    text,
+    html,
+    logLabel: 'Password reset link',
+    logUrl: resetUrl
   });
 }

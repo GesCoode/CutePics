@@ -15,6 +15,12 @@ CREATE TABLE email_verification_tokens (
   expires_at TIMESTAMPTZ NOT NULL
 );
 
+CREATE TABLE password_reset_tokens (
+  id TEXT PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  expires_at TIMESTAMPTZ NOT NULL
+);
+
 CREATE TABLE sessions (
   id TEXT PRIMARY KEY,
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -65,3 +71,4 @@ CREATE INDEX idx_tags_user ON tags(user_id);
 CREATE INDEX idx_flashcards_user ON flashcards(user_id);
 CREATE INDEX idx_sessions_user ON sessions(user_id);
 CREATE INDEX idx_verification_tokens_user ON email_verification_tokens(user_id);
+CREATE INDEX idx_password_reset_tokens_user ON password_reset_tokens(user_id);

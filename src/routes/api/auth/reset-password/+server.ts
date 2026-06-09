@@ -1,0 +1,30 @@
+import { json, type RequestHandler } from '@sveltejs/kit';
+import { resetPasswordWithToken } from '$lib/server/auth';
+
+export const POST: RequestHandler = async ({ request }) => {
+  let body: { token?: string; password?: string };
+
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: 'Invalid request body.' }, { status: 400 });
+  }
+
+  const token = body.token?.trim() ?? '';
+  const password = body.password ?? '';
+
+  if (!token) {
+    return json({ error: 'Missing reset token.' }, { status: 400 });
+  }
+
+  if (password.length < 6) {
+    return json({ error: 'Password must be at least 6 characters.' }, { status: 400 });
+  }
+
+  const updated = await resetPasswordWithToken(token, password);
+  if (!updated) {
+    return json({ error: 'This reset link is invalid or has expired.' }, { status: 400 });
+  }
+
+  return json({ message: 'Password updated. You can sign in with your new password.' });
+};

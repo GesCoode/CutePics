@@ -6,6 +6,7 @@ import { getSql } from '$lib/server/db';
 export const SESSION_COOKIE = 'memlyra_session';
 const SESSION_DAYS = 30;
 const VERIFICATION_DAYS = 2;
+const RESET_HOURS = 1;
 const BCRYPT_ROUNDS = 12;
 
 export type SessionUser = {
@@ -48,6 +49,12 @@ function sessionExpiryDate(): Date {
 function verificationExpiryDate(): Date {
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + VERIFICATION_DAYS);
+  return expiresAt;
+}
+
+function resetExpiryDate(): Date {
+  const expiresAt = new Date();
+  expiresAt.setHours(expiresAt.getHours() + RESET_HOURS);
   return expiresAt;
 }
 
@@ -105,6 +112,93 @@ export async function createVerificationToken(userId: string): Promise<string> {
   `;
 
   return id;
+}
+
+export async function createPasswordResetToken(userId: string): Promise<string> {
+  const sql = getSql();
+  const id = randomBytes(32).toString('hex');
+  const expiresAt = resetExpiryDate();
+
+  await sql`DELETE FROM password_reset_tokens WHERE user_id = ${userId}`;
+  await sql`
+    INSERT INTO password_reset_tokens (id, user_id, expires_at)
+    VALUES (${id}, ${userId}, ${expiresAt})
+  `;
+
+  return id;
+}
+
+export async function isPasswordResetTokenValid(token: string): Promise<boolean> {
+  const sql = getSql();
+
+  const rows = await sql<{ user_id: string }[]>`
+    SELECT user_id
+    FROM password_reset_tokens
+    WHERE id = ${token}
+      AND expires_at > NOW()
+    LIMIT 1
+  `;
+
+  return Boolean(rows[0]);
+}
+
+export async function resetPasswordWithToken(token: string, password: string): Promise<boolean> {
+  const sql = getSql();
+
+  const rows = await sql<{ user_id: string }[]>`
+    SELECT user_id
+    FROM password_reset_tokens
+    WHERE id = ${token}
+      AND expires_at > NOW()
+    LIMIT 1
+  `;
+
+  const match = rows[0];
+  if (!match) {
+    await sql`DELETE FROM password_reset_tokens WHERE id = ${token}`;
+    return false;
+  }
+
+  const passwordHash = await hashPassword(password);
+
+  await sql`
+    UPDATE users
+    SET password_hash = ${passwordHash}
+    WHERE id = ${match.user_id}
+  `;
+  await sql`DELETE FROM password_reset_tokens WHERE user_id = ${match.user_id}`;
+  await sql`DELETE FROM sessions WHERE user_id = ${match.user_id}`;
+
+  return true;
+}
+
+export async function updateUserPassword(
+  userId: string,
+  currentPassword: string,
+  newPassword: string
+): Promise<boolean> {
+  const sql = getSql();
+
+  const rows = await sql<{ password_hash: string }[]>`
+    SELECT password_hash
+    FROM users
+    WHERE id = ${userId}
+    LIMIT 1
+  `;
+
+  const account = rows[0];
+  if (!account || !(await verifyPassword(currentPassword, account.password_hash))) {
+    return false;
+  }
+
+  const passwordHash = await hashPassword(newPassword);
+  await sql`
+    UPDATE users
+    SET password_hash = ${passwordHash}
+    WHERE id = ${userId}
+  `;
+
+  return true;
 }
 
 export async function verifyEmailWithToken(token: string): Promise<boolean> {

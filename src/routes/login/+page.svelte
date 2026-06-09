@@ -22,7 +22,9 @@
   let notice = $derived(
     $page.url.searchParams.get('verified') === '1'
       ? 'Your account has been activated. You can sign in now.'
-      : ''
+      : $page.url.searchParams.get('reset') === '1'
+        ? 'Your password has been updated. Sign in with your new password.'
+        : ''
   );
 
   if (browser) {
@@ -128,5 +130,11 @@
         disabled={submitting}
       />
     </label>
+
+    <p class="text-right text-sm">
+      <a class="font-semibold text-action transition hover:text-action-hover" href="/forgot-password">
+        Forgot password?
+      </a>
+    </p>
   </AuthCard>
 {/if}

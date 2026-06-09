@@ -19,6 +19,25 @@ export async function signOut(): Promise<void> {
   user.set(null);
 }
 
+export async function changePassword(
+  currentPassword: string,
+  newPassword: string
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const response = await fetch('/api/auth/password', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ currentPassword, newPassword })
+  });
+
+  const data = (await response.json()) as { error?: string; message?: string };
+
+  if (!response.ok) {
+    return { ok: false, error: data.error ?? 'Could not update password.' };
+  }
+
+  return { ok: true };
+}
+
 export async function updateProfile(name: string): Promise<boolean> {
   const trimmedName = name.trim();
   if (!trimmedName) return false;
